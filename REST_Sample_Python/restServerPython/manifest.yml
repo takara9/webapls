@@ -1,0 +1,10 @@
+---
+applications:
+- buildpack: https://github.com/cloudfoundry/python-buildpack
+  name: python-rest-svc
+  memory: 64MB
+  disk_quota: 256MB
+  random-route: false
+  domain: mybluemix.net
+  name: pyCalcxx
+  command: python app.py

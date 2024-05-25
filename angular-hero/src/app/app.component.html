@@ -1,0 +1,24 @@
+<h1>{{title}}</h1>
+
+<!--
+    ルーターのリンクを使ってコンポーネントへ遷移させる
+    navのタグのCSSは、app.component.css に記述する
+-->
+<nav>
+  <a routerLink="/dashboard">Dashboard</a>
+  <a routerLink="/heroes">Heroes</a>
+</nav>
+
+<!--
+    以下のタグは、@Component の selectorタグと一致するものが利用される。
+-->
+<!--
+<app-heroes></app-heroes>
+-->
+
+<router-outlet></router-outlet>    
+<app-messages></app-messages>
+
+
+
+

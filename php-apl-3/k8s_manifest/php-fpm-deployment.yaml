@@ -1,0 +1,109 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: php
+spec:
+  selector:
+    app: php-fpm
+  ports:
+  - name: web
+    port: 443
+    protocol: TCP
+    nodePort: 31080
+    targetPort: 443
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php-deployment
+  labels:
+    app: php
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: php-fpm
+  template:
+    metadata:
+      labels:
+        app: php-fpm
+    spec:
+      #initContainers:
+      #- name: download-htdocs
+      #  image: alpine:latest
+      #  command: ['sh', '-c', 'apk add git && git clone https://github.com/takara9/php-apl-2 /mnt' ]
+      #  volumeMounts:
+      #  - name: html-docs
+      #    mountPath: /mnt
+      containers:
+      - name: nginx
+        image: nginx:1.17.8
+        ports:
+        - containerPort: 443
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: html-docs
+        - name: nginx-conf
+          mountPath: /etc/nginx/conf.d
+        - name: cert
+          mountPath: /cert
+      - name: php
+        image: maho/php-app:0.4
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "/setup.sh"]
+        ports:
+        - containerPort: 9000
+        env:
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_DATABASE
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_ROOT_PASSWORD
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_PASSWORD
+        volumeMounts:
+        - name: html-docs
+          mountPath: /var/www/html
+        #- name: php-ini
+        #  mountPath: /etc/php.ini
+        #- name: php-fpm-conf
+        #  mountPath: /etc/php-fpm.conf
+        - name: php-fpm-d
+          mountPath: /etc/php-fpm.d
+      volumes:
+      - name: html-docs
+        emptyDir: {}
+      - name: config-volume
+        configMap:
+          name: mysql-init
+      - name: nginx-conf
+        configMap:
+          name: nginx-conf
+      - name: cert
+        secret:
+          secretName: cert
+      #- name: php-ini
+      #  configMap:
+      #    name: php.ini
+      #- name: php-fpm-conf
+      #  configMap:
+      #    name: php-fpm.conf
+      - name: php-fpm-d
+        configMap:
+          name: php-fpm.d

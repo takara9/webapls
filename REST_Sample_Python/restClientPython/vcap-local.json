@@ -1,0 +1,18 @@
+{
+ "VCAP_SERVICES": {
+  "user-provided": [
+   {
+    "credentials": {
+     "password": "pass",
+     "uri": "https://pycalcxx.mybluemix.net/calc",
+     "username": "user"
+    },
+    "label": "user-provided",
+    "name": "pycalcxxu",
+    "syslog_drain_url": "",
+    "tags": [],
+    "volume_mounts": []
+   }
+  ]
+ }
+}

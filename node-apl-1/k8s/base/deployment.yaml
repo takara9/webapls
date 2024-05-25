@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-node
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-node
+  template:
+    metadata:
+      labels:
+        app: web-node
+    spec:
+      containers:
+      - name: java
+        image: maho/myapp:0.1

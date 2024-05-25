@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  labels:
+    db: mysql
+spec:
+  ports:
+  - port: 80
+    name: web
+  clusterIP: None
+  selector:
+    db: mysql
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      db: mysql 
+  serviceName: "mysql"
+  replicas: 1 
+  template:
+    metadata:
+      labels:
+        db: mysql 
+    spec:
+      terminationGracePeriodSeconds: 10
+      initContainers:
+      - name: init-mysql
+        image: busybox:1.28
+        command: ['sh', '-c', 'if [ ! -d /mnt/data ]; then mkdir /mnt/data && chmod 0766 /mnt/data; fi' ]
+        volumeMounts:
+        - name: data-vol
+          mountPath: /mnt
+      containers:
+      - name: mysql
+        image: mysql:5.7
+        env:
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_DATABASE
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_ROOT_PASSWORD
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_PASSWORD
+        ports:
+        - containerPort: 3306
+          name: mysql-port
+        volumeMounts:
+        - name: data-vol
+          mountPath: /var/lib/mysql
+          subPath: data
+        - name: config-volume
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+      - name: config-volume
+        configMap:
+          name: mysql-init
+  volumeClaimTemplates:
+  - metadata:
+      name: data-vol
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "rook-ceph-block"
+      resources:
+        requests:
+          storage: 10Gi
