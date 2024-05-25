@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: oauth-server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oauth-server
+  labels:
+    app: oauth-server
+    service: oauth-server
+spec:
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 5000
+  selector:
+    app: oauth-server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oauth-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oauth-server
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: oauth-server
+        version: v1
+    spec:
+      serviceAccountName: oauth-server
+      containers:
+      - image: maho/oauth-server:0.2
+        imagePullPolicy: Always
+        name: oauth-server
+        ports:
+        - containerPort: 5000

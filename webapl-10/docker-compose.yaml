@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  oauth:
+    container_name: oauth
+    image: maho/oauth-server:0.2
+    dns: 192.168.1.204
+    networks:
+      - app-net    
+
+  login:
+    container_name: login  
+    image: maho/web-login:0.1
+    ports:
+    - "5000:5000"
+    environment:
+       LDAP_URL: "http://oauth:5000/login"
+    depends_on:
+      - oauth
+    networks:
+      - app-net
+
+networks:
+  app-net:
+    driver: bridge
+
+

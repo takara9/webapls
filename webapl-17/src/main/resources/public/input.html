@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html lang="ja" ng-app="input">
+<head>
+<meta charset="utf-8">
+<title>ビジター登録</title>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+<script src="input.js"></script>
+</head>
+
+
+<body>
+<h1>ビジター登録</h1>
+
+<div ng-controller="InputController">
+<table>
+  <form novalidate class="simple-form">
+  <tr>
+  	<th width="200">項目</th>
+  	<th width="200">値</th>
+  </tr>
+  <tr>
+    <label>
+    <td>名前: </td>
+    <td><input type="text" name="user_name" ng-model="user.name" /></td>
+    </label>
+  </tr>
+  <tr>
+    <label>
+    <td>メールアドレス: </td>
+    <td><input type="email" name="user_email" ng-model="user.email" /></td>
+    </label>
+  </tr>
+  <tr>
+    <td>好みのエディター:</td>
+    <td> 
+    <label><input type="radio" name="rb-1" ng-model="user.preference" value="vi" />vi</label>
+    <label><input type="radio" name="rb-2" ng-model="user.preference" value="emacs" />emacs</label>
+    </td>
+  </tr>
+　<tr>
+    <td colspan="2" align="center"><input type="button" name="reset" ng-click="reset()" value="Reset" /><input type="submit" name="submit" ng-click="update(user)" value="Save" /></td>
+  </tr>
+  </form>
+</table>
+<a href="#" onclick="window.history.back(); return false;">前ページへ戻る</a><br/>
+<p>デバック</p>  
+  <pre>user = {{user | json}}</pre>
+  <pre>master = {{master | json}}</pre>
+</div>
+
+</body>
+</html>
+

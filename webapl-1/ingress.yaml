@@ -1,0 +1,22 @@
+## Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webapl1
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/affinity: 'cookie'
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: ingress.k8s1.labo.local
+    http:
+      paths:
+      - path: /webapl1(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: webapl1
+            port:
+              number: 80

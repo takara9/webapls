@@ -1,0 +1,5 @@
+pip
+setuptools
+Flask
+requests
+

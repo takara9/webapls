@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<head>
+  <title>認証認可フォーム</title>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</head>
+<body style="background-color:LightBlue;">
+
+  
+<H1>認証認可サーバー</H1>
+
+<p>アプリID（クライアントID）: {{ client_id }}</p>
+
+<p>
+誰から誰にアクセスを許可するのか？<br>
+<br>
+リソースサーバーへのアクセスをアプリ{{ client_id }}に許可する。
+</p>
+
+
+
+<form action="/approve?client_id={{ client_id }}&redirect_uri={{ redirect_uri }}&state={{ state }}" method="POST">
+
+<fieldset>
+  <legend>ユーザーIDとパスワードで認証</legend>  
+  <div>
+    ユーザーID:<input type="text" name="username" placeholder="Username">
+  </div>
+  <div>
+    パスワード:<input type="password" name="password" placeholder="Password">
+  </div>
+  <input type="hidden" name="reqid" value="{{ reqid }}">
+</fieldset>
+
+<fieldset>
+  <legend>リソースサーバーにアクセスを認可する項目にチェックしてください</legend>
+<div>
+  <input type="checkbox" id="openid" name="scope2" value="openid">
+  <label for="coding">OpenID</label>
+</div>
+<div>
+  <input type="checkbox" id="profile" name="scope2" value="profile">
+  <label for="profile">プロファイル</label>
+</div>
+<div>
+  <input type="checkbox" id="email" name="scope2" value="email">
+  <label for="email">電子メール</label>
+</div>
+<div>
+  <input type="checkbox" id="phone" name="scope2" value="phone">
+  <label for="phone">電話番号</label>
+</div>
+<div>
+  <input type="checkbox" id="address" name="scope2" value="address">
+  <label for="address">住所</label>
+</div>
+</fieldset>
+  <input type="submit" class="btn btn-success" name="approve" value="ユーザー認証">
+</form>
+
+</html>
+

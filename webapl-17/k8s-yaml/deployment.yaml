@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapl-17
+  labels:
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapl-17
+      version: v1      
+  template:
+    metadata:
+      labels:
+        app: webapl-17
+        version: v1
+    spec:
+      containers:
+      - name: webapl-17
+        image: harbor.labo.local/k8s/webapl-17:__TAG__
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8080
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8080
+          initialDelaySeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sh", "-c", "sleep 10"]
+
+        imagePullPolicy: Always
+        envFrom:
+        - secretRef:
+            name: db-credentials
+        volumeMounts:
+          - name: config-volume
+            mountPath: /workspace/config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: application.prop
+          
+      imagePullSecrets:
+      - name: regcred
+
+
+          
+          

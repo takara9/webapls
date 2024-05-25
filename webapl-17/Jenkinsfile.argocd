@@ -1,0 +1,105 @@
+pipeline {
+  agent any
+  environment {
+    repository   = "k8s/webapl-17"  
+    reg_server   = "harbor.labo.local"
+    image        = "${ reg_server }/${ repository }" + ":$BUILD_NUMBER"
+    registry_url = "https://${ reg_server }"
+    auth_regi    = "harbor-login"
+    auth_k8s     = "k8s4-test"
+  }
+
+  tools {
+      maven 'mvn-3.8.5'
+  }
+
+  stages {
+
+    stage ('ユニットテスト') {
+      steps {
+        sh 'mvn -Dmaven.test.failure.ignore=true test' 
+      }
+      post {
+        success {
+           junit 'target/surefire-reports/**/*.xml' 
+        }}}
+
+
+    stage ('コンテナビルド') {
+      steps {
+        sh "./mvnw spring-boot:build-image -Dmaven.test.failure.ignore=true -Dspring-boot.build-image.imageName=$image"
+        sh "docker images $image"
+      }}
+
+
+    stage('コンテナレジストリへプッシュ') {
+      steps {
+        script {
+          docker.withRegistry(registry_url, auth_regi) {
+            //dockerImage.push()
+	    sh "docker push $image"	
+          }}}}
+
+
+    stage('コンテナの脆弱性検査とSBOM作成') {
+      steps {
+          script {
+      	      withCredentials([string(credentialsId: "anchore-login", variable: 'ANCHORE_CLI_PASS')]) {
+	         sh '''
+                 export ANCHORE_CLI_URL=http://localhost:8228/v1
+                 export ANCHORE_CLI_USER=admin
+                 anchore-cli image add  $image
+                 anchore-cli image wait $image
+                 anchore-cli image vuln $image all
+                 anchore-cli image content $image os
+                 anchore-cli image content $image java                 
+		 '''}}}}
+
+    stage('K8sクラスタへのデプロイ') {
+      steps {
+        script {
+              withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
+                  sh '''
+                  export ARGOCD_SERVER="argocd-server.argocd.k8s4.labo.local"
+                  APP_NAME="webapl-17"
+                  IMAGE_DIGEST=$(docker image inspect $image -f '{{join .RepoDigests ","}}')
+                  argocd --grpc-web app set  $APP_NAME --insecure --kustomize-image $IMAGE_DIGEST
+                  argocd --grpc-web app sync $APP_NAME --insecure --force --timeout 600
+                  argocd --grpc-web app wait $APP_NAME --insecure --timeout 600
+                  '''}}}}
+
+    stage ('統合テスト#1') {
+      steps {
+         sh '''
+            cd rest-test
+            mvn clean	 
+            mvn -Dmaven.test.failure.ignore=true test
+	        ''' }
+      post {
+        success {
+           junit 'rest-test/target/surefire-reports/**/*.xml' 
+        }}}
+
+
+    stage ('統合テスト#2') {
+      steps {
+         sh '''
+            cd selenium-test
+	    mkdir $BUILD_ID
+            mvn clean	 
+            mvn -Dmaven.test.failure.ignore=true test
+	    mv *.mp4 $BUILD_ID
+        ''' }
+      post {
+        success {
+           junit 'selenium-test/target/surefire-reports/**/*.xml' 
+        }}}}
+  post {
+      always {
+          sh 'docker rmi $image'
+          //sh 'docker system prune --all --force'
+      }}
+
+}
+
+

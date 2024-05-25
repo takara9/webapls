@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapl-4
+  labels:
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapl-4
+      version: v1      
+  template:
+    metadata:
+      labels:
+        app: webapl-4
+        version: v1
+    spec:
+      containers:
+      - name: webapl-4
+        image: maho/web-java:0.1
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Always
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8080
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8080
+          initialDelaySeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3

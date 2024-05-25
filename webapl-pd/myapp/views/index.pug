@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1 #{title}
+  p Hostname #{hostname}
+  p IP Address #{ip}
+  p URL Host #{host}
+  p User Agent #{agent}
+
+  h2 コンテナ環境変数
+  ul
+    each val, key in env
+      li= key + " = " + val
+

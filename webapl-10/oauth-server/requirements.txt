@@ -1,0 +1,11 @@
+pip
+setuptools
+cryptography==3.3.2
+Flask
+Flask-RESTful
+Flask-JWT
+flask-cors
+python_jwt
+ldap3
+pySSHA
+

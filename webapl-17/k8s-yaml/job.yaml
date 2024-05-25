@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mysql-create-db
+spec:
+  template:
+    spec:
+      containers:
+      - name: mysql-client
+        image: mysql:5.7
+        command:
+          - bash
+          - "-c"
+          - |
+            sleep 10 && \
+            mysql -u $MYSQL_USER -p$MYSQL_PASSWORD -h $MYSQL_HOST \
+            -e "show databases;"
+        envFrom:
+        - secretRef:
+            name: db-credentials
+      restartPolicy: Never
+  completions: 1

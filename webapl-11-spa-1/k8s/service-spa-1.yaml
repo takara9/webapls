@@ -1,0 +1,13 @@
+# サービス
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-spa-1
+spec:
+  selector:
+    app: webspa1
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer

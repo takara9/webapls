@@ -1,0 +1,11 @@
+<script type="text/javascript">
+  function link(){
+      location.href="{{ transfer_url }}";
+  }
+  var myHeaders = new Headers();
+  myHeaders.append('Authorization', value="Authorization" );
+  setTimeout("link()", 0);
+</script>
+
+<a href="{{ transfer_url }}">{{ transfer_url }}</a>
+

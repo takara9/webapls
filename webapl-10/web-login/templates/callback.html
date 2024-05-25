@@ -1,0 +1,47 @@
+<script src="https://code.jquery.com/jquery-3.3.1.js"
+	integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+	crossorigin="anonymous">
+</script>
+
+<script type="text/javascript">
+  console.log("CALLBACK")
+  var fragment = window.location.hash;
+  var params = fragment.split("&");
+  var token = "";
+  for (var index = 0; index < params.length; index++) {
+      wk = params[index].split("=");
+      console.log(wk[0]," = ",wk[1]);
+      if ( wk[0] == "#access_token" ) {
+	  token = wk[1];
+	  break;
+      }
+  }
+  
+  // define vars
+  var url = "{{ transfer_url }}";
+
+  // ajax call
+  $.ajax({
+      url: url,
+      type: 'GET',
+      beforeSend : function(xhr) {
+	  xhr.setRequestHeader("Authorization", token);
+      },
+      data: {},
+      error : function() {
+	  // error handler
+      },
+      success: function(data) {
+          // success handler //can redirect to any route of your wish
+      }
+  });
+
+  function link(){
+      location.href="{{ transfer_url }}";
+  }
+  setTimeout("link()", 3);
+  
+</script>
+
+
+

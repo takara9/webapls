@@ -1,0 +1,14 @@
+setuptools
+cryptography==3.3.2
+Flask
+Flask-RESTful
+Flask-JWT
+flask-cors
+ldap3
+pySSHA
+requests
+flask-httpauth
+authlib
+tinydb
+pymongo
+ldap3

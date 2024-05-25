@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-spa-1
+  labels:
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webspa1
+      version: v1      
+  template:
+    metadata:
+      labels:
+        app: webspa1
+        version: v1
+    spec:
+      containers:
+      - name: webspa1
+        image: maho/webapl-11:1.5
+        ports:
+        - containerPort: 3000
+        imagePullPolicy: Always

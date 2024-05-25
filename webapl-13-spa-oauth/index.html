@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/public/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="oidc_auth_lib.js"></script>    
+    <title>Vue.js v3 サンプルアプリ</title>
+  </head>
+  <body>
+
+    <div id="status">
+      <button class="styled" type="button" onclick="doLogin()">ログイン</button>
+      <button class="styled" type="button" onclick="doLogout()">ログアウト</button>
+      {{ login_user }}  {{ message }}
+    </div>
+
+    <!-- id="app" の範囲がVueコントローラーの範囲 -->
+    <div id="app">
+      <h1>Vue.js v3 サンプルアプリ</h1>
+      <table>
+        <tr>
+          <th>SPAブラウザ内アプリ画面遷移</th>
+          <th>APIサーバーへのアクセス要求</th>
+          <th>APIサーバーの保護コンテンツ表示</th>
+       </tr>
+	<tr>
+	  <td>
+	    <ul>
+	      <li><router-link to="/compo1">Vueコンポ #１（公開）</router-link></li>
+	      <li><router-link to="/compo2">Vueコンポ #２（公開）</router-link></li>
+	      <li><router-link to="/compo3">Vueコンポ #３（保護）</router-link></li>
+	      <li><router-link to="/compo4">Vueコンポ #４（保護）</router-link></li>
+	    </ul>
+	  </td>
+	  <td>
+	    <ul>
+	    <li><button class="styled" type="button" onclick="getApi1()">正統トークンでテスト</button></li>
+	    <li><button class="styled" type="button" onclick="getApi2()">不正に細工したトークン</button></li>
+	    <li><button class="styled" type="button" onclick="getApi3()">保護コンテンツ表示要求</button></li>
+	    <li><button class="styled" type="button" onclick="getApi4()">Token無し時は認証画面</button></li>	    	    	    </ul>
+	  </td>
+          <td>
+	    <div id="reply"></div>
+          </td>
+	</tr>
+      </table>
+      <hr>
+      <router-view></router-view>
+    </div>
+    <script type="module" src="/main.js"></script>
+    <hr>
+    <p>
+	このサンプルアプリはKubernetesで動作し、OIDC 認証サーバーと連携して
+	ユーザー認証、アクセス許可を取得して動作します。
+	VueコンポーネントはSPA(Single Page Application)を実現するための機能で、
+	以下のリンクをクリックすることで、ページの下部だけを入れ替えます。
+      </p>
+      
+      <p>
+	保護コンテンツにアクセスした場合、トークンがブラウザに保存されていなければ、
+	認証サーバーのユーザー認証画面が現れます。既に認証と認可を得ていれば、
+	認可の範囲に従ってアクセス可能になります。
+      </p>
+
+    <script>
+      // ログイン
+      //   認証要求を作成して認証サーバーへジャンプ
+      //
+      function doLogin() {
+	  console.log("Login")
+	  if (checkLogin()) {
+              alert("既にログインしています");
+              return;
+	  } else {
+              // 認証要求を作成して認証サーバーへリダイレクトする
+	      // コールバック先を設定する createAuthnReq()
+              var params = createAuthnReq("/");
+              window.location = authServer.authorizationEndpoint + "?" + params;
+	  }
+      }
+
+      //
+      // ステータス
+      //
+      const appdata = {
+	  data() {
+	      return {
+		  message: '',
+		  user_name: '',
+	      }
+	  },
+	  mounted() {
+	      var queryString = window.location.search;
+	      var error = urlParams.get('error');
+	      if (error != undefined) {
+		  this.message = "ログイン失敗 エラー:" + error;
+	      } else {
+		  setInterval(() => {
+		      login_user = checkExpair(); // ログインの有効期限チェック
+		      if ( checkLogin() ) {
+			  this.message = "ログイン中";
+			  this.login_user = login_user + "さん";
+		      }else{
+			  this.message = "ログインしてません。";
+		      }
+		  },2000)
+	      }
+	  }
+      }
+      Vue.createApp(appdata).mount('#status')
+      
+    </script>
+      
+    
+    <style>
+      .app {
+	  font-family: sans-serif;
+	  border: 1px solid #eee;
+	  border-radius: 2px;
+	  padding: 20px 30px;
+	  margin-top: 1em;
+	  margin-bottom: 40px;
+	  user-select: none;
+	  overflow-x: auto;
+      }
+      a {
+	  text-decoration:none; 
+      }
+
+    </style>
+  </body>
+</html>
