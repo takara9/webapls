@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-apl-deployment
+  labels:
+    app: node-test-pod-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-test-pod-test
+  template:
+    metadata:
+      labels:
+        app: node-test-pod-test
+    spec:
+      containers:
+      - name: node-apl
+        image: maho/node-express-login:XXXXX
+        ports:
+        - containerPort: 3000

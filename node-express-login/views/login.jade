@@ -1,0 +1,23 @@
+if user
+   p #{user.name}さん、こんにちは!	
+
+   form(method='post', action='/logout')
+     input(name='logout', type='hidden', value='DELETE')
+     a(href='javascript:', onClick='forms[0].submit()') [ログアウト]
+
+else
+   p ログインしてください
+   form(method='post', action='/')
+     fieldset
+       legend ログイン
+       p
+         label(for='name') ユーザー名：
+         input(name='name')
+       p
+         label(for='pwd') パスワード：
+         input(type='password', name='pwd')
+       input(type='submit')
+
+   if expressFlash.length > 0
+       p <strong>エラーメッセージ:</strong> #{ expressFlash }
+
