@@ -1,0 +1,20 @@
+{
+  "name": "chatbot-echo-facebook",
+  "version": "1.0.0",
+  "description": "Chatbot template for facebook",
+  "main": "chatman.js",
+  "scripts": {
+    "start": "node ./chatman.js"
+  },
+  "author": "Maho Takara",
+  "license": "MIT",
+  "dependencies": {
+    "cfenv": "^1.0.4",
+    "cloudant": "^1.8.0",
+    "facebook-bot-messenger": "^1.0.4",
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "https": "^1.0.0",
+    "watson-developer-cloud": "^2.32.1"
+  }
+}
