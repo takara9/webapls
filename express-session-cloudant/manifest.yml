@@ -1,0 +1,11 @@
+applications:
+- path: .
+  memory: 128M
+  instances: 2
+  domain: mybluemix.net
+  name: express-session-test
+  host: express-session-test-tkr
+  disk_quota: 1024M
+services:
+- Cloudant NoSQL DB-zj
+
