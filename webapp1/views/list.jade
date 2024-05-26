@@ -1,0 +1,31 @@
+extends layout
+
+block content
+
+  h1= title
+  p テーブル処理のテスト
+  
+  a(href="/move?prev=20") 前ページ 
+  a(href="/move?next=20") 次ページ 
+  開始列 #{start} 
+  表示行 数#{rows} 
+  table(class="table5",border="1")
+   th 都道府県
+   th 市町村
+   th 都道府県カナ
+   th 市町村カナ
+   th 住所コード
+   th 郵便番号
+   th 都道府県コード
+   - for (i=0; i < rec_data.length; i++)
+    tr
+     td #{rec_data[i].todoufuken} 
+     td #{rec_data[i].sicyoson} 
+     td #{rec_data[i].todoufuken_kana} 
+     td #{rec_data[i].sicyoson_kana} 
+     td #{rec_data[i].jusho_CD} 
+     td #{rec_data[i].zip_code} 
+     td #{rec_data[i].todofuken_CD} 
+
+
+

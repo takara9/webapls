@@ -1,0 +1,57 @@
+doctype html
+html(lang="ja")
+  head
+    meta(charset="utf-8")
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='icon', href='/images/favicon.ico')
+    script(src='/javascripts/jquery-3.2.1.js')
+    script.
+        $(function(){
+            $('#menu li').hover(function(){
+                $("ul:not(:animated)", this).slideDown();
+            }, function(){
+                $("ul.child",this).slideUp();
+            });
+        });
+
+  body
+    div.menu-container
+      ul#menu
+        li トップメニュー
+        li クラスDB
+          ul.child
+            li 
+              a(href="/list") 検索、リスト表示
+            li
+              a(href="/form") フォーム表示
+            li
+              a(href="#") データ編集、削除
+            li
+              a(href="#") トレーニング開始
+
+        li 対話ログ
+          ul.child
+            li 
+              a(href="#") 検索、リスト表示
+            li
+              a(href="#") フォーム詳細表示
+        li 会社案内
+          ul.child
+            li 
+              a(href="#") 会社概要
+            li
+              a(href="#") 沿革
+            li
+              a(href="#") アクセスマップ
+        li ユーザー設定
+          ul.child
+            li 
+              a(href="#") パスワード設定
+            li
+              a(href="/logout") ログアウト
+
+    block content
+    block foot
+       #footer
+          p Create by Maho Tarara

@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h1= title
+
+  form(method='post', action='/store')
+    fieldset
+      legend フォーム
+      p
+        label(for='id') ID
+        input(type="text", name='id', value="#{rec_data.id}")
+      p
+        label(for='name') 名前
+        input(type="text", name='name', value="#{rec_data.name}")
+
+      input(type='submit')
+
+
