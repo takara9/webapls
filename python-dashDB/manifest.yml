@@ -1,0 +1,9 @@
+---
+applications:
+ - name: Python_dashDB
+   host: Python-dashDB
+   random-route: true
+   memory: 64M
+   services:
+   - dashDB for Analytics-iq
+
