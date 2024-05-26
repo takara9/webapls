@@ -1,0 +1,7 @@
+apiVersion: maho.takara.org/v1alpha1
+kind: Takara
+metadata:
+  name: takara-busybox
+spec:
+  # Add fields here
+  size: 10

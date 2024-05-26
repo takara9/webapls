@@ -1,0 +1,189 @@
+*** takara_controller.go.backup	2019-08-17 23:29:18.000000000 +0900
+--- takara_controller.go	2019-08-18 09:31:11.000000000 +0900
+***************
+*** 2,12 ****
+--- 2,15 ----
+  
+  import (
+  	"context"
++ 	"reflect"
+  	
+  	mahov1alpha1 "github.com/takara-operator/pkg/apis/maho/v1alpha1"
+  	corev1 "k8s.io/api/core/v1"
++         appsv1 "k8s.io/api/apps/v1"
+  	"k8s.io/apimachinery/pkg/api/errors"
+  	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
++         "k8s.io/apimachinery/pkg/labels"	
+  	"k8s.io/apimachinery/pkg/runtime"
+  	"k8s.io/apimachinery/pkg/types"
+  	"sigs.k8s.io/controller-runtime/pkg/client"
+***************
+*** 100,153 ****
+  		return reconcile.Result{}, err
+  	}
+  
+- 	// Define a new Pod object
+- 	pod := newPodForCR(instance)
+  
+! 	// Set Takara instance as the owner and controller
+! 	if err := controllerutil.SetControllerReference(instance, pod, r.scheme); err != nil {
+  		return reconcile.Result{}, err
+  	}
+  
+! 	// Check if this Pod already exists
+! 	found := &corev1.Pod{}
+! 	err = r.client.Get(context.TODO(), types.NamespacedName{Name: pod.Name, Namespace: pod.Namespace}, found)
+! 	if err != nil && errors.IsNotFound(err) {
+! 		reqLogger.Info("Creating a new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
+! 		err = r.client.Create(context.TODO(), pod)
+  		if err != nil {
+  			return reconcile.Result{}, err
+  		}
+  
+! 		// Pod created successfully - don't requeue
+! 		return reconcile.Result{}, nil
+! 	} else if err != nil {
+  		return reconcile.Result{}, err
+  	}
+  
+! 	// Pod already exists - don't requeue
+! 	reqLogger.Info("Skip reconcile: Pod already exists", "Pod.Namespace", found.Namespace, "Pod.Name", found.Name)
+! 	return reconcile.Result{}, nil
+  }
+  
+! // newPodForCR returns a busybox pod with the same name/namespace as the cr
+! func newPodForCR(cr *mahov1alpha1.Takara) *corev1.Pod {
+! 	labels := map[string]string{
+! 		"app": cr.Name,
+  	}
+! 	return &corev1.Pod{
+  		ObjectMeta: metav1.ObjectMeta{
+! 			Name:      cr.Name + "-pod",
+! 			Namespace: cr.Namespace,
+! 			Labels:    labels,
+  		},
+  		Spec: corev1.PodSpec{
+! 			Containers: []corev1.Container{
+! 				{
+! 					Name:    "busybox",
+  					Image:   "busybox",
+  					Command: []string{"sleep", "3600"},
+  				},
+  			},
+  		},
+  	}
+  }
+--- 103,215 ----
+  		return reconcile.Result{}, err
+  	}
+  
+  
+!         // deploymentの存在をチェックして、既に存在していれば生成しない
+!         found := &appsv1.Deployment{}
+!         err = r.client.Get(context.TODO(), types.NamespacedName{Name: instance.Name, Namespace: instance.Namespace}, found)
+!         if err != nil && errors.IsNotFound(err) {
+!                 // 新deploymentの定義
+!                 dep := r.deploymentForTakara(instance)
+!                 reqLogger.Info("Creating a new Deployment.", "Deployment.Namespace", dep.Namespace, "Deployment.Name", dep.Name)
+!                 err = r.client.Create(context.TODO(), dep)
+!                 if err != nil {
+!                         reqLogger.Error(err, "Failed to create new Deployment.", "Deployment.Namespace", dep.Namespace, "Deployment.Name", dep.Name)
+!                         return reconcile.Result{}, err
+!                 }
+!                 // Deployment生成成功
+!                 return reconcile.Result{Requeue: true}, nil
+!         } else if err != nil {
+!                 reqLogger.Error(err, "Failed to get Deployment.")
+                  return reconcile.Result{}, err
+          }
+  
+! 
+! 	// デプロイメントのサイズをspecと同じになるように調整する
+! 	size := instance.Spec.Size
+! 	if *found.Spec.Replicas != size {
+! 		found.Spec.Replicas = &size
+! 		err = r.client.Update(context.TODO(), found)
+  		if err != nil {
++ 			reqLogger.Error(err, "Failed to update Deployment.", "Deployment.Namespace", found.Namespace, "Deployment.Name", found.Name)
+  			return reconcile.Result{}, err
+  		}
++ 		// Specを更新
++ 		return reconcile.Result{Requeue: true}, nil
++ 	}
+  
+! 	// ポッド名と共にTakaraの状態を更新
+! 	// Takara's deployment のポッドをリストする
+! 	podList := &corev1.PodList{}
+! 	labelSelector := labels.SelectorFromSet(labelsForTakara(instance.Name))
+! 	listOps := &client.ListOptions{
+! 		Namespace:     instance.Namespace,
+! 		LabelSelector: labelSelector,
+! 	}
+! 	err = r.client.List(context.TODO(), listOps, podList)
+! 	if err != nil {
+! 		reqLogger.Error(err, "Failed to list pods.", "Takara.Namespace", instance.Namespace, "Takara.Name", instance.Name)
+  		return reconcile.Result{}, err
+  	}
++ 	podNames := getPodNames(podList.Items)
+  
+! 	// 必要であれば、Nodesの状態を更新する
+! 	if !reflect.DeepEqual(podNames, instance.Status.Nodes) {
+! 		instance.Status.Nodes = podNames
+! 		err := r.client.Status().Update(context.TODO(), instance)
+! 		if err != nil {
+! 			reqLogger.Error(err, "Failed to update Takara status.")
+! 			return reconcile.Result{}, err
+! 		}
+  	}
+  
+! 	return reconcile.Result{}, nil
+  }
+! 
+! // example-takara デプロイメントを生成する
+! func (r *ReconcileTakara) deploymentForTakara(m *mahov1alpha1.Takara) *appsv1.Deployment {
+! 	ls := labelsForTakara(m.Name)
+! 	replicas := m.Spec.Size
+! 
+! 	dep := &appsv1.Deployment{
+  		ObjectMeta: metav1.ObjectMeta{
+! 			Name:      m.Name,
+! 			Namespace: m.Namespace,
+! 		},
+! 		Spec: appsv1.DeploymentSpec{
+! 			Replicas: &replicas,
+! 			Selector: &metav1.LabelSelector{
+! 				MatchLabels: ls,
+! 			},
+! 			Template: corev1.PodTemplateSpec{
+! 				ObjectMeta: metav1.ObjectMeta{
+! 					Labels: ls,
+  				},
+  				Spec: corev1.PodSpec{
+! 					Containers: []corev1.Container{{
+  						Image:   "busybox",
++ 						Name:    "takara",
+  						Command: []string{"sleep", "3600"},
++ 					}},
+  				},
+  			},
+  		},
+  	}
++ 	// Takaraインスタンスをオーナーとコントラーとしてセットする
++ 	controllerutil.SetControllerReference(m, dep, r.scheme)
++ 	return dep
++ }
++ 
++ // labelsForTakara は、セレクター用ラベルを返す
++ // カスタムリソースの一員として与えられたラベルも返す
++ func labelsForTakara(name string) map[string]string {
++ 	return map[string]string{"app": "takara", "takara_cr": name}
++ }
++ 
++ // getPodNames ポッドの名前の配列を返す
++ func getPodNames(pods []corev1.Pod) []string {
++ 	var podNames []string
++ 	for _, pod := range pods {
++ 		podNames = append(podNames, pod.Name)
++ 	}
++ 	return podNames
+  }
