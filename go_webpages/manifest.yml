@@ -1,0 +1,13 @@
+applications:
+- name: go-webserver2
+  path: .
+  memory: 128M
+  instances: 1
+  domain: mybluemix.net
+  host: go-webserver2
+  disk_quota: 1024M
+  command: go_webserver2
+  buildpack: https://github.com/cloudfoundry/go-buildpack.git
+  env:
+    GOVERSION: go1.9.2
+    GOPACKAGENAME: github.com/takara9/go_webserver

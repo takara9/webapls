@@ -1,0 +1,6 @@
+[submodule "vendor/github.com/takara9/go_util"]
+	path = vendor/github.com/takara9/go_util
+	url = https://github.com/takara9/go_util.git
+[submodule "vendor/github.com/takara9/go_webserver2"]
+	path = vendor/github.com/takara9/go_webserver2
+	url = https://github.com/takara9/go_webserver2.git

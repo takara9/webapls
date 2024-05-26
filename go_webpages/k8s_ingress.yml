@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: go-web-ingress
+spec:
+  tls:
+  - hosts:
+    - mycluster3.jp-tok.containers.mybluemix.net
+    secretName: mycluster3
+  rules:
+  - host: mycluster3.jp-tok.containers.mybluemix.net
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: go-web-svc
+          servicePort: 8080

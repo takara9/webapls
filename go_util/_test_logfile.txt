@@ -1,0 +1,6 @@
+INFO 2018/01/16 04:43:51 loadConfig_test.go:13: Open log
+INFO 2018/01/16 04:43:51 loadConfig_test.go:18: Load _test_config.json
+INFO 2018/01/16 04:43:51 loadConfig_test.go:33: END OF TEST
+INFO 2018/01/16 05:04:44 loadConfig_test.go:14: Open log
+INFO 2018/01/16 05:04:44 loadConfig_test.go:19: Load _test_config.json
+INFO 2018/01/16 05:04:44 loadConfig_test.go:34: END OF TEST

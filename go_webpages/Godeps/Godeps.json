@@ -1,0 +1,18 @@
+{
+	"ImportPath": ".",
+	"GoVersion": "go1.9",
+	"GodepVersion": "v79",
+	"Packages": [
+		"github.com/takara9/go_webserver2"
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/takara9/go_util",
+			"Rev": "38ff0221e206b57cd7ea242e4f1238fb8f613b8a"
+		},
+		{
+			"ImportPath": "github.com/takara9/go_webserver2",
+			"Rev": "25d39c2700995e71dbb9a3b9c80891cec437ffd5"
+		}
+	]
+}
