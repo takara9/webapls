@@ -1,0 +1,19 @@
+{
+  "name": "nodejs-rest-svc",
+  "version": "1.0.0",
+  "description": "REST Server of Node.js",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Maho Takara",
+  "license": "MIT",
+  "engines": {
+    "node": "6.11.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4",
+    "express-basic-auth": "^1.1.2"
+  }
+}

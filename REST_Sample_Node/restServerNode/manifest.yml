@@ -1,0 +1,10 @@
+---
+applications:
+- buildpack: https://github.com/cloudfoundry/nodejs-buildpack
+  name: nodejs-rest-svc
+  memory: 64MB
+  disk_quota: 256MB
+  random-route: false
+  domain: mybluemix.net
+  name: nodeHashxx
+
