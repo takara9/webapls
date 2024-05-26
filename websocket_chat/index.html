@@ -1,0 +1,76 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>WebSocket Chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+    </style>
+  </head>
+      
+　<body>
+    <ul id="messages"></ul>
+    
+    <form name="form1" action="">
+      <input type="text" id="msg" autocomplete="off">
+      <button type="button" onclick="sendMsg();">Send</button>
+    </form>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var wsUri = `ws://${location.host}/ws/chat`;
+      var ws = new WebSocket(wsUri);
+
+      function sendMsg() {
+        var text = document.getElementById('msg').value;
+        console.log("msg = " + text);
+        var payload = {
+            payload: text,
+            ts: (new Date()).getTime()
+        };
+
+        ws.send(JSON.stringify(payload));
+        document.getElementById('msg').value  = "";
+        return;
+      }
+    
+      ws.onopen = function(ev) {
+        console.log('[Connected]');
+      };
+
+      ws.onclose = function(ev) {
+        console.log('[Disconnected]');
+      }
+
+      // メッセージ受信時の処理
+      ws.onmessage = function(ev) {
+        var msg = JSON.parse(ev.data);
+        console.log("ON Message", msg);
+        $('#messages').append($('<li>').text(msg.payload));
+      }
+
+      // Enter Key の無効化でフォームの再読み込み抑制
+      $(function(){
+        $("input"). keydown(function(e) {
+          if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
+	    sendMsg();
+            return false;
+          } else {
+            return true;
+          }
+        });
+      });
+    </script>
+
+  </body>
+</html>
+
+
+
+

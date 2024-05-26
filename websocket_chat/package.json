@@ -1,0 +1,10 @@
+{
+  "name": "websocket-chat-app",
+  "version": "0.0.1",
+  "description": "websocket chat app",
+  "dependencies": {
+    "cloudant": "^1.7.0",
+    "express": "^4.14.1",
+    "express-ws": "^2.0.0"
+  }
+}
