@@ -1,0 +1,28 @@
+{
+  "name": "bluemix-cloudant-coding-patterns",
+  "version": "1.0.0",
+  "description": "Basic code pattern for Bluemix Cloundant",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/takara9/bluemix-cloudant-coding-patterns.git"
+  },
+  "keywords": [
+    "node",
+    "cloudant"
+  ],
+  "author": "Maho Takara",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/takara9/bluemix-cloudant-coding-patterns/issues"
+  },
+  "homepage": "https://github.com/takara9/bluemix-cloudant-coding-patterns#readme",
+  "dependencies": {
+    "cloudant": "^1.7.1",
+    "express": "^4.15.2",
+    "fast-csv": "^2.4.0"
+  }
+}
