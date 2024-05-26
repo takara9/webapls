@@ -1,0 +1,19 @@
+{
+    "name": "websocket-chat-app",
+    "version": "1.0.0",
+    "main": "index.js",
+    "description": "websocket chat app",
+    "author": "Maho Takara",
+    "license": "MIT",
+    "dependencies": {
+	"cloudant": "^1.7.0",
+	"express": "^4.14.1",
+	"express-ws": "^2.0.0"
+    },
+    "description": "ウェブ・チャットのアプリ"
+}
+
+
+
+
+
