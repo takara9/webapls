@@ -1,0 +1,54 @@
+#!/usr/bin/env python   
+# -*- coding:utf-8 -*-   
+# 
+#  Special grep command when you have this issue.
+#  when too many files in a folder, sometime you can see this error message.
+#  "/bin/grep: Argument list too long"
+#  this command avoid this issue.
+#
+#  Usage: tgrep keyword [folder]
+#  
+#  Author: Maho Takara
+#  Date: Nov-11,2016
+#
+
+import os 
+import re
+import json
+import codecs
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
+
+argvs = sys.argv
+argc = len(argvs)
+
+
+if argc == 1:
+    print "Usage: tgrep keyword [folder]"
+    sys.exit(0)
+else:
+    keyword = argvs[1]
+
+if argc == 2:
+    folder = "."
+else:
+    folder = argvs[2]
+
+files = os.listdir(folder)
+
+for file in files:
+    path = folder + "/" + file 
+    lineNo = 0
+    f = open(path)
+    line = f.readline()
+    
+    while line:
+        sline = line[:-1]
+        if (re.search(keyword, sline)):
+            print path,"(",lineNo,")",": ",sline;
+
+        line = f.readline()
+        lineNo = lineNo + 1
+    f.close
+
