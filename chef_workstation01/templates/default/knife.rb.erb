@@ -1,0 +1,13 @@
+current_dir = File.dirname(__FILE__)
+log_level                :info
+log_location             STDOUT
+node_name                'chef'
+client_key               "#{current_dir}/chef.pem"
+validation_client_name   'chef-validator'
+validation_key           "#{current_dir}/tech-team-validator.pem"
+chef_server_url          'https://chefserver.takara.org/organizations/tech-team'
+cache_type               'BasicFile'
+cache_options( :path => "#{ENV['HOME']}/.chef/checksums" )
+cookbook_path            ["#{current_dir}/../cookbooks"]
+knife[:softlayer_username] = "<%= @username %>"
+knife[:softlayer_api_key]  = "<%= @api_key %>"
