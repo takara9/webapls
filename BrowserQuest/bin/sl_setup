@@ -1,0 +1,14 @@
+#!/bin/bash
+
+IPADDR=`curl http://ifconfig.io/`
+
+echo $IPADDR
+
+CFDIR=../client/config
+cp $CFDIR/config_build.json-dist $CFDIR/config_build.json
+sed -i -e "s/Set production websocket host here/$IPADDR/g" $CFDIR/config_build.json
+
+cp $CFDIR/config_local.json-dist $CFDIR/config_local.json
+sed -i -e "s/Set local dev websocket host here/$IPADDR/g" $CFDIR/config_local.json
+
+
