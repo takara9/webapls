@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dialog xsi:noNamespaceSchemaLocation="WatsonDialogDocument_1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <flow>
+        <folder label="Main" id="main">
+
+            <output id="start">
+                <prompt selectionType="RANDOM">
+                    <item>ねぇねぇ、</item>
+                    <item>ちょっと、</item>
+                </prompt>
+		<goto ref="capture_movie">
+		  <action varName="favorit_movie"  operator="SET_TO_NO"/>
+		  <action varName="title"  operator="SET_TO_BLANK"/>
+		  <action varName="Complete"  operator="SET_TO_NO"/>
+		</goto>
+	    </output>
+
+            <output id="close_bore">
+                <prompt selectionType="SEQUENTIAL">
+                    <item>つまらないなぁ</item>
+                </prompt>
+	    </output>
+
+
+            <output id="close_like">
+                <prompt selectionType="SEQUENTIAL">
+                    <item>あなたの好きな映画を一つ覚えたよ</item>
+                    <item>嬉しいなぁ、あなたの好きな映画を一つ覚えたよ</item>
+                </prompt>
+	    </output>
+
+        </folder>
+
+        <folder label="Library">
+            <folder label="Movie Capture" id="capture_movie">
+	      <output>
+                <prompt selectionType="SEQUENTIAL">
+		  <item>最近、おもしろい映画見た？</item>
+                </prompt>
+                <getUserInput>
+		  <input>
+		    <grammar>
+		      <item>はい</item>
+		      <item>うん</item>
+		      <item>そうね</item>
+		      <item>見たよ</item>
+		      <item>$ 見たよ</item>
+		    </grammar>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>それで</item>
+			<item>そうなの</item>
+		      </prompt>
+		      <goto ref="capture_title">
+			<action varName="favorit_movie"  operator="SET_TO_YES"/>
+		      </goto>
+		    </output>
+		  </input>
+		  <input>
+		    <grammar>
+		      <item>いいえ</item>
+		      <item>見てない</item>
+		      <item>嫌い</item>
+		      <item>見ない</item>
+		    </grammar>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>そうなんだ</item>
+		      </prompt>
+		      <goto ref="close_bore">
+			<action varName="favorit_movie"  operator="SET_TO_NO"/>
+			<action varName="Complete"   operator="SET_TO_YES"/>
+		      </goto>
+		    </output>
+		  </input>
+
+		  <default>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>はい、いいえ、で答えてくれると判るよ</item>
+		      </prompt>
+                    </output>
+		  </default>
+
+		</getUserInput>
+	      </output>
+            </folder>
+
+	    <folder label="Movie Title Capture" id="capture_title">
+	      <output>
+		<prompt selectionType="RANDOM">
+		  <item>その映画のタイトルは何ですか？</item>
+		  <item>何て言うタイトルの映画なの？</item>
+		</prompt>
+		<getUserInput>
+		  <input>
+		    <grammar>
+		      <item>それは、</item>
+		      <item>$ (DYNAMIC_DATA)={title}</item>
+		    </grammar>
+		    <action varName="title" operator="SET_TO">{title.source}</action>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>{title}、で良いですか</item>
+			<item>{title}、で正しいですか</item>
+		      </prompt>
+		      
+		      <getUserInput>
+			<input>
+			  <grammar>
+			    <item>はい</item>
+			  </grammar>
+			  <output>
+			    <prompt selectionType="RANDOM">
+			      <item>はーい</item>
+			    </prompt>
+			    <goto ref="capture_rate"/>
+			  </output>
+			</input>
+			
+			<input>
+			  <grammar>
+			    <item>いいえ</item>
+			    <item>いえ</item>
+			    <item>いや</item>
+			    <item>no</item>
+			    <item>No</item>
+			  </grammar>
+
+			  <output>
+			    <prompt selectionType="RANDOM">
+			      <item>じゃ、もう一度、繰り返すね</item>
+			    </prompt>
+			    <goto ref="capture_title">
+			      <action varName="title"  operator="SET_TO_BLANK"/>
+			    </goto>
+			  </output>
+			</input>
+
+			<default>
+			  <output>
+			    <prompt selectionType="RANDOM">
+			      <item>申し訳ありません、はい、か、いいえ、で答えてね</item>
+			      <item>はい、または、いいえ、で答えてね</item>
+			    </prompt>
+			    <goto ref='caputure_title'/>
+			  </output>
+			</default>
+		      </getUserInput>
+		      
+		    </output>
+		  </input>
+		  
+		</getUserInput>
+	      </output>
+	    </folder>
+
+	    <folder label="Title rateing" id="capture_rate">
+	      <output>
+		<prompt selectionType="RANDOM">
+		  <item>{title}の評価を教えてね。1から5の5が一番良いとして5点満点の何点？</item>
+		</prompt>
+		<getUserInput>
+		  <input>
+		    <grammar>
+		      <item>評価は</item>
+		      <item>! \d{1}</item>
+		      <item>! \d{1}点</item>
+		    </grammar>
+		    <output>
+		      <action varName="rate" operator="SET_TO_USER_INPUT"/>
+		      <prompt selectionType="RANDOM">
+			<item>あなたの評価は</item>
+		      </prompt>
+
+		      <function>
+			<script name="Calculate">
+			  Name=Calculate
+			  Line= "{rate}".match(/\d/g).join("");
+			</script>
+			<output>
+			  <action varName="rate" operator="SET_TO">{MCT:CUSTOM:Calculate:value}</action>
+			  <prompt selectionType="RANDOM">
+			    <item>{rate}ですね</item>
+			  </prompt>
+			  <if matchType="ANY">
+			    <cond varName="rate" operator="EQUALS">5</cond>
+			    <cond varName="rate" operator="EQUALS">4</cond>
+			    <cond varName="rate" operator="EQUALS">3</cond>
+			    <cond varName="rate" operator="EQUALS">2</cond>
+			    <cond varName="rate" operator="EQUALS">1</cond>
+			    <goto ref="close_like">
+			      <action varName="Complete"  operator="SET_TO_YES"/>
+			    </goto>
+			  </if>
+			  <output>
+			    <prompt selectionType="RANDOM">
+			      <item>1〜5で答えてね</item>
+			    </prompt>
+			    <goto ref="capture_rate"/>
+			  </output>
+			</output>
+		      </function>
+
+		    </output>
+		  </input>
+
+		</getUserInput>
+	      </output>
+	    </folder>
+	    
+
+            <folder label="Storage"/>
+        </folder>
+
+
+        <folder label="Global"/>
+	<folder label="Concepts">
+	  <concept>
+	    <grammar>
+	      <item>僕</item>
+	      <item>ぼく</item>
+	      <item>私</item>
+	      <item>わたし</item>
+	      <item>俺</item>
+	      <item>おれ</item>
+	    </grammar>
+	  </concept>
+	</folder>
+    </flow>
+
+    <entities>
+      <entity name="DYNAMIC_DATA" entityType="GENERIC">
+	<value name="DataCapture" value="DataCapture">
+	  <grammar>
+	    <item>*</item>
+	  </grammar>
+	</value>
+	<entityRules></entityRules>
+      </entity>
+    </entities>
+
+    <constants>
+        <var_folder name="Home"/>
+    </constants>
+
+    <variables>
+        <var_folder name="Home">
+          <var name="favorit_movie"  type="YESNO"  description="好きな映画の有無"/>
+          <var name="title"          type="TEXT"   description="好きな映画のタイトル"/>
+	  <var name="rate"           type="TEXT"   description="評価"/>
+          <var name="Complete"  type="YESNO" description="完了フラグ"/>
+        </var_folder>
+    </variables>
+
+    <settings>
+      <setting name="USERIDNUM" type="USER">69810</setting>
+      <setting name="EMAIL" type="USER">takara9@gmail.com</setting>
+      <setting name="PASSWORD" type="USER">mct:f972618f697988c5f1808da2115a54f0</setting>
+      <setting name="FIRSTNAME" type="USER">Maho</setting>
+      <setting name="LASTNAME" type="USER">Takara</setting>
+      <setting name="COUNTRY" type="USER">JP</setting>
+      <setting name="STATE" type="USER"></setting>
+      <setting name="CITY" type="USER">Tokyo</setting>
+      <setting name="BDAY" type="USER">1</setting>
+      <setting name="BMONTH" type="USER">1</setting>
+      <setting name="BYEAR" type="USER">2001</setting>
+      <setting name="SEX" type="USER">Male</setting>
+      <setting name="DISPLAYNAME" type="USER">Maho</setting>
+      <setting name="PROVIDESECURITYPASSWORD" type="USER">false</setting>
+      <setting name="SECURITYPASSWORD" type="USER"></setting>
+      <setting name="SHOWPERSPROFILE" type="USER">true</setting>
+      <setting name="USETYPE" type="USER">0</setting>
+      <setting name="DATEJOINED" type="USER">2016-03-30 15:08:32.0</setting>
+      <setting name="LASTLOGIN" type="USER">2016-03-30 15:08:32.0</setting>
+      <setting name="LOGINCOUNT" type="USER">1</setting>
+      <setting name="CREDIT" type="USER">-100</setting>
+      <setting name="CONVCOUNT" type="USER">2</setting>
+      <setting name="PERSONALITYTYPEID" type="USER">6</setting>
+      <setting name="SHOWSENDMESSAGE" type="USER">true</setting>
+      <setting name="ACTIVATED" type="USER">true</setting>
+      <setting name="MESSENGEREMAIL" type="USER"></setting>
+      <setting name="MESSENGERPASSWORD" type="USER"></setting>
+      <setting name="SENDCHATEMAIL" type="USER">true</setting>
+      <setting name="SENDFAVEMAIL" type="USER">true</setting>
+      <setting name="CACHE" type="USER">false</setting>
+      <setting name="CLASSTYPE" type="USER">3</setting>
+      <setting name="AUTOLEARN" type="USER">false</setting>
+      <setting name="LANGUAGE" type="USER">ja-JP</setting>
+      <setting name="RESPONSETIME" type="USER">0</setting>
+      <setting name="MAXAUTOLEARNITEMS" type="USER">0</setting>
+      <setting name="NUMAUTOSETRELATED" type="USER">0</setting>
+      <setting name="TIMEZONEID" type="USER">Asia/Tokyo</setting>
+      <setting name="AUTOSETRELATEDNODEID" type="USER">0</setting>
+      <setting name="RETURNTOCHATNODEID" type="USER">0</setting>
+      <setting name="INPUTMASKTYPE" type="USER">0</setting>
+      <setting name="NUMLOGINATTEMPTS" type="USER">0</setting>
+      <setting name="CONCEPTMATCHING" type="USER">3</setting>
+      <setting name="USE_CONCEPTS">3</setting>
+    </settings>
+
+</dialog>

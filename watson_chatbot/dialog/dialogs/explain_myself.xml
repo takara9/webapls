@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dialog xsi:noNamespaceSchemaLocation="WatsonDialogDocument_1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <flow>
+        <folder label="Main" id="main">
+
+            <output id="start">
+                <prompt selectionType="RANDOM">
+                    <item>はるの事、なんでも聞いてね。 質問を終わり時は「終了」と言ってね</item>
+                </prompt>
+		<goto ref="capture_know_2001">
+		  <action varName="Complete"  operator="SET_TO_NO"/>
+		</goto>
+	    </output>
+
+            <getUserInput id="getUserInput_2442994">
+              <search ref="folder_2442998"/>
+              <default>
+                <output>
+                  <prompt selectionType="RANDOM">
+                    <item>質問の意味が判らなくて、ごめんなさい。別の言い方で試してみてね。</item>
+                    <item>質問タイムを終了する時は、「終了」とか「おわり」とか言ってね。</item>
+                    <item>質問タイムなんだけど、終わるなら「終了」とか言ってね。</item>
+                  </prompt>
+                </output>
+              </default>
+            </getUserInput>
+        </folder>
+
+        <folder label="Library">
+
+          <folder label="Close" id="close">
+	    <output>
+	      <prompt selectionType="RANDOM">
+		<item>自己紹介の質問タイム終了です</item>
+		<item>自己紹介の質問タイムおわりです</item>
+	      </prompt>
+	    </output>
+	  </folder>
+
+          <folder label="Live Content" id="folder_2442998">
+
+	    <input>
+	      <grammar>
+		<item>終了</item>
+		<item>終わり</item>
+		<item>中止</item>
+		<item>おわり</item>
+	      </grammar>
+	      <output>
+		<prompt selectionType="RANDOM">
+		  <item>はーい</item>
+		</prompt>
+		<goto ref="close">
+		  <action varName="Complete"  operator="SET_TO_YES"/>
+		</goto>
+	      </output>
+	    </input>
+
+	    <input>
+	      <grammar>
+		<item>年は幾つ</item>
+		<item>$年は幾つ</item>
+		<item>歳は幾つ</item>
+		<item>$歳は幾つ</item>
+		<item>歳はいくつ</item>
+		<item>年齢は</item>
+		<item>いくつ</item>
+		<item>何歳ですか</item>
+		<item>何歳</item>
+	      </grammar>
+	      <output>
+		<prompt selectionType="RANDOM">
+		  <item>5ヶ月だよ</item>
+		</prompt>
+	      </output>
+	    </input>
+
+	    <input>
+	      <grammar>
+		<item>性別は</item>
+		<item>男、女</item>
+		<item>男</item>
+		<item>男$</item>
+		<item>$男$</item>
+		<item>女</item>
+		<item>女$</item>
+		<item>$女$</item>
+		<item>性別は$</item>
+		<item>$女子</item>
+		<item>$女子$</item>
+		<item>$女の子$</item>
+		<item>$女の子</item>
+		<item>女の子</item>
+		<item>$男子</item>
+		<item>$男子$</item>
+		<item>$男の子$</item>
+	      </grammar>
+	      <output>
+		<prompt selectionType="RANDOM">
+		  <item>女の子だよ</item>
+		  <item>女子だぜ</item>
+		  <item>女子なんだ</item>
+		  <item>はるは、女の子ですよ</item>
+		  <item>はるは、女子ですよ</item>
+		</prompt>
+	      </output>
+	    </input>
+
+
+	    <input>
+	      <grammar>
+		<item>人工知能</item>
+		<item>人工知能$</item>
+		<item>$人工知能$</item>
+		<item>$人工知能</item>
+		<item>AI$</item>
+		<item>$AI$</item>
+	      </grammar>
+	      <output>
+		<prompt selectionType="RANDOM">
+		  <item>はるは、人工知能というより、人工無能と言われるチャットボットだよ</item>
+		  <item>はるは、人工知能じゃないよ。コグニティブシステムのチャットボットだよ</item>
+		  <item>はるは、AIじゃないよ。コグニティブ・チャットボットだよ</item>
+		</prompt>
+	      </output>
+	    </input>
+
+	    <input>
+	      <grammar>
+		<item>コグニティブ</item>
+		<item>コグニティブ$</item>
+		<item>$コグニティブ</item>
+		<item>$コグニティブ$</item>
+	      </grammar>
+	      <output>
+		<prompt selectionType="RANDOM">
+		  <item>コグニティブを一言で言うのは難しいなぁ、壮大な目標があるからね。コグニティブ・システムは、プログラミングしなくても学習するんだ、非構造化データと自然言語を理解するけど、でも自然言語プロセッサーというわけではないよ。　人工知能の様だけど、進化する知能と呼ぶ方が正しいんだってさ。白か黒か、０か１かではなく、グレーな回答もできるんだってよ。本当凄いね、私にはできないけど（笑)</item>
+		</prompt>
+	      </output>
+	    </input>
+
+
+	    <input>
+	      <grammar>
+		<item>ワトソン$</item>
+		<item>$ワトソン$</item>
+		<item>Watson$</item>
+		<item>$Watson$</item>
+	      </grammar>
+	      <output>
+		<prompt selectionType="RANDOM">
+		  <item>はるの頭脳の中核は、ワトソンなんだよ。ワトソンは北米にあって、一言一言、北米のワトソン本体で処理してるんだよ。</item>
+		</prompt>
+	      </output>
+	    </input>
+
+
+          </folder>
+        </folder>
+    </flow>
+
+    <constants>
+        <var_folder name="Home"/>
+    </constants>
+
+    <variables>
+        <var_folder name="Home">
+          <var name="Complete"   type="YESNO" description="完了フラグ"/>
+        </var_folder>
+    </variables>
+
+    <settings>
+      <setting name="USERIDNUM" type="USER">69810</setting>
+      <setting name="EMAIL" type="USER">takara9@gmail.com</setting>
+      <setting name="PASSWORD" type="USER">mct:f972618f697988c5f1808da2115a54f0</setting>
+      <setting name="FIRSTNAME" type="USER">Maho</setting>
+      <setting name="LASTNAME" type="USER">Takara</setting>
+      <setting name="COUNTRY" type="USER">JP</setting>
+      <setting name="STATE" type="USER"></setting>
+      <setting name="CITY" type="USER">Tokyo</setting>
+      <setting name="BDAY" type="USER">1</setting>
+      <setting name="BMONTH" type="USER">1</setting>
+      <setting name="BYEAR" type="USER">2001</setting>
+      <setting name="SEX" type="USER">Male</setting>
+      <setting name="DISPLAYNAME" type="USER">Maho</setting>
+      <setting name="PROVIDESECURITYPASSWORD" type="USER">false</setting>
+      <setting name="SECURITYPASSWORD" type="USER"></setting>
+      <setting name="SHOWPERSPROFILE" type="USER">true</setting>
+      <setting name="USETYPE" type="USER">0</setting>
+      <setting name="DATEJOINED" type="USER">2016-03-30 15:08:32.0</setting>
+      <setting name="LASTLOGIN" type="USER">2016-03-30 15:08:32.0</setting>
+      <setting name="LOGINCOUNT" type="USER">1</setting>
+      <setting name="CREDIT" type="USER">-100</setting>
+      <setting name="CONVCOUNT" type="USER">2</setting>
+      <setting name="PERSONALITYTYPEID" type="USER">6</setting>
+      <setting name="SHOWSENDMESSAGE" type="USER">true</setting>
+      <setting name="ACTIVATED" type="USER">true</setting>
+      <setting name="MESSENGEREMAIL" type="USER"></setting>
+      <setting name="MESSENGERPASSWORD" type="USER"></setting>
+      <setting name="SENDCHATEMAIL" type="USER">true</setting>
+      <setting name="SENDFAVEMAIL" type="USER">true</setting>
+      <setting name="CACHE" type="USER">false</setting>
+      <setting name="CLASSTYPE" type="USER">3</setting>
+      <setting name="AUTOLEARN" type="USER">false</setting>
+      <setting name="LANGUAGE" type="USER">ja-JP</setting>
+      <setting name="RESPONSETIME" type="USER">0</setting>
+      <setting name="MAXAUTOLEARNITEMS" type="USER">0</setting>
+      <setting name="NUMAUTOSETRELATED" type="USER">0</setting>
+      <setting name="TIMEZONEID" type="USER">Asia/Tokyo</setting>
+      <setting name="AUTOSETRELATEDNODEID" type="USER">0</setting>
+      <setting name="RETURNTOCHATNODEID" type="USER">0</setting>
+      <setting name="INPUTMASKTYPE" type="USER">0</setting>
+      <setting name="NUMLOGINATTEMPTS" type="USER">0</setting>
+      <setting name="CONCEPTMATCHING" type="USER">3</setting>
+      <setting name="USE_CONCEPTS">3</setting>
+    </settings>
+
+</dialog>

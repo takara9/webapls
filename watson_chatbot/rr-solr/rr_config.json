@@ -1,0 +1,6 @@
+{
+    "cluster_name":    "haru_cluster",
+    "cluster_size":    "1",
+    "config_name":     "haru_config",
+    "config_zip_path": "solr_config_ja/solr_config.zip"
+}

@@ -1,0 +1,73 @@
+200,thunderstorm with light rain,嵐
+201,thunderstorm with rain,嵐
+202,thunderstorm with heavy rain,嵐
+210,light thunderstorm,嵐
+211,thunderstorm,嵐
+212,heavy thunderstorm,嵐
+221,ragged thunderstorm,嵐
+230,thunderstorm with light drizzle,嵐
+231,thunderstorm with drizzle,嵐
+232,thunderstorm with heavy drizzle,嵐
+300,light intensity drizzle,霧
+301,drizzle,霧
+302,heavy intensity drizzle,霧
+310,light intensity drizzle rain,霧
+311,drizzle rain,霧
+312,heavy intensity drizzle rain,霧
+313,shower rain and drizzle,霧
+314,heavy shower rain and drizzle,霧
+321,shower drizzle,霧
+500,light rain,雨
+501,moderate rain,雨
+502,heavy intensity rain,雨
+503,very heavy rain,雨
+504,extreme rain,雨
+511,freezing rain,雨
+520,light intensity shower rain,雨
+521,shower rain,雨
+522,heavy intensity shower rain,雨
+531,ragged shower rain,雨
+600,light snow,雪
+601,snow,雪
+602,heavy snow,雪
+611,sleet,雪
+612,shower sleet,雪
+615,light rain and snow,雪
+616,rain and snow,雪
+620,light shower snow,雪
+621,shower snow,雪
+622,heavy shower snow,雪
+701,mist,もや
+711,smoke,煙
+721,haze,煙霧
+731,sand dust whirls,黄砂
+741,fog,もや
+751,sand,黄砂
+761,dust,粉塵
+762,volcanic ash,降灰
+771,squalls,スコール
+781,tornado,竜巻
+800,clear sky,快晴
+801,few clouds,曇り
+802,scattered clouds,曇り
+803,broken clouds,曇り
+804,overcast clouds,曇り
+900,tornado,竜巻
+901,tropical storm,嵐
+902,hurricane,台風
+903,cold,寒波
+904,hot,熱波
+905,windy,強風
+906,hail,ひょう
+951,calm,平穏
+952,light breeze,そよ風
+953,gentle breeze,そよ風
+954,moderate breeze,そよ風
+955,fresh breeze,そよ風
+956,strong breeze,そよ風
+957,high wind  near gale,強風
+958,gale,強風
+959,severe gale,強風
+960,storm,暴風
+961,violent storm,暴風
+962,hurricane,暴風

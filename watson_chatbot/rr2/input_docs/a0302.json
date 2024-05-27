@@ -1,0 +1,7 @@
+{
+"id": "302",
+"title": "Watson Dialog の利用料金の説明",
+"keywords": "Dialog 対話機能 Watson Bluemix 料金",
+"type": "Watson",
+"body": "IBM Watson Dialog 標準の料金プランでは、毎月最初の 1000 回のAPIコールは無料です。それを超過すると￥2 円/APIコールとなります。"
+}

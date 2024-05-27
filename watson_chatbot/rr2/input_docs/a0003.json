@@ -1,0 +1,7 @@
+{
+"id": "3",
+"title": "Watsonの日本語対応機能",
+"keywords": "Watson ワトソン 日本語 日本語対応",
+"type": "Watson",
+"body": "Watson の 日本語に対応する機能は、自然言語分類 ( Natural Language Classifier ; NLC )、優先検索 (Retrieve and Rank ; RR )、 対話機能 (Dialog)、音声認識 ( Speech to Text ; STT)、音声合成 ( Text to Speech ; TTS)、文書変換 ( Document Conversion ; DC ) の機能です。 "
+}

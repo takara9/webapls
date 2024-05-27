@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dialog xsi:noNamespaceSchemaLocation="WatsonDialogDocument_1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <flow>
+        <folder label="Main" id="main">
+
+            <output id="start">
+                <prompt selectionType="RANDOM">
+                    <item>はるは、あなたの事を知りたいので、教えてくださいね。</item>
+                    <item>はるに、あなたの事を教えてくださいね。</item>
+                    <item>ねぇねぇ、</item>
+                </prompt>
+		<goto ref="acquire_favorit_food">
+		  <action varName="favorit_noodle"  operator="SET_TO_BLANK"/>
+		  <action varName="Complete"  operator="SET_TO_NO"/>
+		</goto>
+	    </output>
+
+            <output id="close_hate">
+                <prompt selectionType="SEQUENTIAL">
+                    <item>もう話しかけないで。。。</item>
+                </prompt>
+	    </output>
+
+            <output id="close_like">
+                <prompt selectionType="SEQUENTIAL">
+                    <item>あなたの好きな食べ物を一つ覚えたよ</item>
+                </prompt>
+	    </output>
+
+        </folder>
+
+        <folder label="Library">
+            <folder label="Favorit Capture" id="acquire_favorit_food">
+	      <output>
+                <prompt selectionType="SEQUENTIAL">
+		  <item>好きな食べ物はなぁに？ ラーメン、うどん、そば、パスタ の中で一番好きなのはどれ</item>
+                </prompt>
+                <getUserInput>
+
+		  <input>
+		    <grammar>
+		      <item>ラーメン</item>
+		      <item>$ ラーメン</item>
+		      <item>$ ラーメン $</item>
+		    </grammar>
+		    <action varName="favorit_noodle" operator="SET_TO">ラーメン</action>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>私もラーメン大好き！</item>
+		      </prompt>
+		      <goto ref="memory_favorit_noodle"/>
+		    </output>
+		  </input>
+
+		  <input>
+		    <grammar>
+		      <item>うどん</item>
+		      <item>$ うどん</item>
+		      <item>$ うどん $</item>
+		    </grammar>
+		    <action varName="favorit_noodle" operator="SET_TO">うどん</action>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>つるつる うどんは、美味しいよね</item>
+		      </prompt>
+		      <goto ref="memory_favorit_noodle"/>
+		    </output>
+		  </input>
+
+		  <input>
+		    <grammar>
+		      <item>そば</item>
+		      <item>$ そば</item>
+		      <item>$ そば $</item>
+		      <item>蕎麦</item>
+		      <item>$ 蕎麦</item>
+		      <item>$ 蕎麦 $</item>
+		    </grammar>
+		    <action varName="favorit_noodle" operator="SET_TO">そば</action>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>そばが好きなんだ</item>
+		      </prompt>
+		      <goto ref="memory_favorit_noodle"/>
+		    </output>
+		  </input>
+
+		  <input>
+		    <grammar>
+		      <item>パスタ</item>
+		      <item>$ パスタ</item>
+		      <item>$ パスタ $</item>
+		      <item>スパゲティ</item>
+		      <item>$ スパゲティ</item>
+		      <item>$ スパゲティ $</item>
+		    </grammar>
+		    <action varName="favorit_noodle" operator="SET_TO">パスタ</action>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>私はミートソースのパスタが大好き</item>
+		      </prompt>
+		      <goto ref="memory_favorit_noodle"/>
+		    </output>
+		  </input>
+
+		  <input>
+		    <grammar>
+		      <item>そうね</item>
+		      <item>えーとね</item>
+		      <item>えーと</item>
+		      <item>うん、</item>
+		    </grammar>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>そうそう、</item>
+		      </prompt>
+		      <goto ref="acquire_favorit_food"/>
+		    </output>
+		  </input>
+
+		  <output>
+		    <prompt selectionType="RANDOM">
+		      <item>あらら、私の話聞いてないの？ 私が挙げた麺類から答えてくれないから嫌い</item>
+		    </prompt>
+		    <goto ref="close_hate">
+		      <action varName="Complete" operator="SET_TO_YES"/>
+		    </goto>
+		  </output>
+
+		</getUserInput>
+	      </output>
+            </folder>
+
+
+            <folder label="Memory Favorit Noodle" id="memory_favorit_noodle">
+	      <output>
+                <prompt selectionType="SEQUENTIAL" >
+                    <item>あなたの好きな麺は、{favorit_noodle} なのね。</item>
+                </prompt>
+		<goto ref="close_like">
+		  <action varName="Complete"  operator="SET_TO_YES"/>
+		</goto>
+	      </output>
+	    </folder>
+
+            <folder label="Storage"/>
+        </folder>
+
+        <folder label="Global"/>
+        <folder label="Concepts"/>
+    </flow>
+    <constants>
+        <var_folder name="Home"/>
+    </constants>
+    <variables>
+        <var_folder name="Home">
+          <var name="favorit_noodle"  type="TEXT"  description="好きな麺類"/>
+          <var name="Complete"  type="YESNO" description="完了フラグ"/>
+        </var_folder>
+    </variables>
+
+
+    <settings>
+        <setting name="CACHE" type="USER">false</setting>
+        <setting name="CLASSTYPE" type="USER">3</setting>
+        <setting name="AUTOLEARN" type="USER">false</setting>
+        <setting name="LANGUAGE" type="USER">JA</setting>
+        <setting name="RESPONSETIME" type="USER">0</setting>
+        <setting name="MAXAUTOLEARNITEMS" type="USER">0</setting>
+        <setting name="NUMAUTOSETRELATED" type="USER">0</setting>
+        <setting name="TIMEZONEID" type="USER">Asia/Tokyo</setting>
+        <setting name="AUTOSETRELATEDNODEID" type="USER">0</setting>
+        <setting name="RETURNTOCHATNODEID" type="USER">0</setting>
+        <setting name="INPUTMASKTYPE" type="USER">0</setting>
+        <setting name="NUMLOGINATTEMPTS" type="USER">0</setting>
+        <setting name="CONCEPTMATCHING" type="USER">0</setting>
+    </settings>
+</dialog>

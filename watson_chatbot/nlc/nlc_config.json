@@ -1,0 +1,6 @@
+{
+    "nlc_name": "nlc_haru",
+    "input_csv": "./data/nlc_200.csv",
+    "training_csv": "./data/nlc_training_data.csv",
+    "database": "reactions"
+}

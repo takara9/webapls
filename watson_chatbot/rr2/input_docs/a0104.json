@@ -1,0 +1,7 @@
+{
+"id": "104",
+"title": "Watson NLC のアプリケーション開発の言語",
+"keywords": "ワトソン 開発言語 NLC 自然言語分類 技術文書",
+"type": "Watson",
+"body": "Watson NLCのAPIはRESTで提供されます。 言語ライブラリとして node, java, pythonが提供され、解説の技術文書は、https://www.ibm.com/watson/developercloud/natural-language-classifier/api/v1/ にあります。また、APIエクスプローラ ( API explorer ) が このURL https://watson-api-explorer.mybluemix.net/apis/natural-language-classifier-v1#/ に公開されており、RESTでコールする時の詳細を解説されており、サンプルが提供されているので、NLCインスタンスのユーザーIDとパスワードを持っていれば、参考にしながら試してみる事ができます。"
+}

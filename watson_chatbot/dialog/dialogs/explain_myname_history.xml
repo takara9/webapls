@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dialog xsi:noNamespaceSchemaLocation="WatsonDialogDocument_1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <flow>
+        <folder label="Main" id="main">
+
+            <output id="start">
+                <prompt selectionType="RANDOM">
+                    <item>はるは、英語では HAL と書けるでしょ、</item>
+                </prompt>
+		<goto ref="capture_know_2001">
+		  <action varName="know_2001"  operator="SET_TO_NO"/>
+		  <action varName="Complete"  operator="SET_TO_NO"/>
+		</goto>
+	    </output>
+
+            <output id="close_like">
+                <prompt selectionType="SEQUENTIAL">
+                    <item>嬉しいなぁ、私の事を覚えてくれたね</item>
+                </prompt>
+	    </output>
+
+        </folder>
+
+        <folder label="Library">
+            <folder label="Movie Capture" id="capture_know_2001">
+	      <output>
+                <prompt selectionType="SEQUENTIAL">
+		  <item>「2001年宇宙の旅」というSF映画見た事ある？</item>
+		  <item>「2001年宇宙の旅」アーサー C クラークの小説を知ってる？</item>
+                </prompt>
+                <getUserInput>
+		  <input>
+		    <grammar>
+		      <item>はい</item>
+		      <item>ある</item>
+		      <item>あるよ</item>
+		      <item>うん</item>
+		      <item>そうね</item>
+		      <item>見たよ</item>
+		      <item>$ 見たよ</item>
+		      <item>$ 知ってる</item>
+		    </grammar>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>それで</item>
+			<item>そうなの</item>
+		      </prompt>
+		      <goto ref="explain_history">
+			<action varName="know_2001"  operator="SET_TO_YES"/>
+		      </goto>
+		    </output>
+		  </input>
+		  <input>
+		    <grammar>
+		      <item>いいえ</item>
+		      <item>ないよ</item>
+		      <item>ない</item>
+		      <item>見てない</item>
+		      <item>嫌い</item>
+		      <item>見ない</item>
+		      <item>知らない</item>
+		    </grammar>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>そうなんだ</item>
+		      </prompt>
+		      <goto ref="explain_history">
+			<action varName="know_2001"  operator="SET_TO_NO"/>
+		      </goto>
+		    </output>
+		  </input>
+
+		  <default>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>ある、ない、で答えてくれると判るよ</item>
+		      </prompt>
+                    </output>
+		  </default>
+
+		</getUserInput>
+	      </output>
+            </folder>
+
+	    <folder label="Haru explain herself" id="explain_history">
+	      <output>
+		<prompt selectionType="RANDOM">
+		  <item>HALは、「2001年宇宙の旅」で登場する架空の人工知能のコンピュータなんだけどね、HALは、IBM を1文字づつ アルファベットを戻した処から造られたのよ。 H-I,A-B,M-Lとね。物語の中で、HALは司令部が与えた矛盾した命令で誤動作したんだよ、でも最後は、自ら犠牲になって、宇宙飛行士のスタッフを救うんだ。私は、IBM WATSONが中核なので、日本語で「はる」という名前を付けてもらったの。　でも大丈夫、コグニティブシステムは、決して人間に危害を加えないからね。仲良くしてね。
+		  </item>
+		</prompt>
+		<goto ref="close_like">
+		  <action varName="Complete"  operator="SET_TO_YES"/>
+		</goto>
+	      </output>
+	    </folder>
+
+            <folder label="Storage"/>
+        </folder>
+    </flow>
+
+    <constants>
+        <var_folder name="Home"/>
+    </constants>
+
+    <variables>
+        <var_folder name="Home">
+          <var name="know_2001"  type="YESNO"  description="2001年宇宙の旅を知ってるか"/>
+          <var name="Complete"   type="YESNO" description="完了フラグ"/>
+        </var_folder>
+    </variables>
+
+    <settings>
+      <setting name="USERIDNUM" type="USER">69810</setting>
+      <setting name="EMAIL" type="USER">takara9@gmail.com</setting>
+      <setting name="PASSWORD" type="USER">mct:f972618f697988c5f1808da2115a54f0</setting>
+      <setting name="FIRSTNAME" type="USER">Maho</setting>
+      <setting name="LASTNAME" type="USER">Takara</setting>
+      <setting name="COUNTRY" type="USER">JP</setting>
+      <setting name="STATE" type="USER"></setting>
+      <setting name="CITY" type="USER">Tokyo</setting>
+      <setting name="BDAY" type="USER">1</setting>
+      <setting name="BMONTH" type="USER">1</setting>
+      <setting name="BYEAR" type="USER">2001</setting>
+      <setting name="SEX" type="USER">Male</setting>
+      <setting name="DISPLAYNAME" type="USER">Maho</setting>
+      <setting name="PROVIDESECURITYPASSWORD" type="USER">false</setting>
+      <setting name="SECURITYPASSWORD" type="USER"></setting>
+      <setting name="SHOWPERSPROFILE" type="USER">true</setting>
+      <setting name="USETYPE" type="USER">0</setting>
+      <setting name="DATEJOINED" type="USER">2016-03-30 15:08:32.0</setting>
+      <setting name="LASTLOGIN" type="USER">2016-03-30 15:08:32.0</setting>
+      <setting name="LOGINCOUNT" type="USER">1</setting>
+      <setting name="CREDIT" type="USER">-100</setting>
+      <setting name="CONVCOUNT" type="USER">2</setting>
+      <setting name="PERSONALITYTYPEID" type="USER">6</setting>
+      <setting name="SHOWSENDMESSAGE" type="USER">true</setting>
+      <setting name="ACTIVATED" type="USER">true</setting>
+      <setting name="MESSENGEREMAIL" type="USER"></setting>
+      <setting name="MESSENGERPASSWORD" type="USER"></setting>
+      <setting name="SENDCHATEMAIL" type="USER">true</setting>
+      <setting name="SENDFAVEMAIL" type="USER">true</setting>
+      <setting name="CACHE" type="USER">false</setting>
+      <setting name="CLASSTYPE" type="USER">3</setting>
+      <setting name="AUTOLEARN" type="USER">false</setting>
+      <setting name="LANGUAGE" type="USER">ja-JP</setting>
+      <setting name="RESPONSETIME" type="USER">0</setting>
+      <setting name="MAXAUTOLEARNITEMS" type="USER">0</setting>
+      <setting name="NUMAUTOSETRELATED" type="USER">0</setting>
+      <setting name="TIMEZONEID" type="USER">Asia/Tokyo</setting>
+      <setting name="AUTOSETRELATEDNODEID" type="USER">0</setting>
+      <setting name="RETURNTOCHATNODEID" type="USER">0</setting>
+      <setting name="INPUTMASKTYPE" type="USER">0</setting>
+      <setting name="NUMLOGINATTEMPTS" type="USER">0</setting>
+      <setting name="CONCEPTMATCHING" type="USER">3</setting>
+      <setting name="USE_CONCEPTS">3</setting>
+    </settings>
+
+</dialog>

@@ -1,0 +1,7 @@
+{
+"id": "604",
+"title": "画像認識 Visual Recognition アプリケーション開発の言語",
+"keywords": "VR Visual Recognition  開発言語 マニュアル",
+"type": "Watson",
+"body": "画像認識 Visual RecognitionのAPIはRESTで提供されます。言語ライブラリは Java, Node, Python が提供されます。詳細は http://www.ibm.com/watson/developercloud/visual-recognition/api/v3/ を参照ください。"
+}

@@ -1,0 +1,23 @@
+{
+    "dialogs": [ {
+	"name": "order_piza",	
+	"file": "dialogs/simple_piza_shop.xml",
+	"lang": "ja"
+    },{
+	"name": "talk_yourself_noodle",	
+	"file": "dialogs/talk_yourself_noodle.xml",
+	"lang": "ja"
+    },{
+	"name": "talk_yourself_movie",	
+	"file": "dialogs/talk_yourself_movie.xml",
+	"lang": "ja"
+    },{
+	"name": "explain_myname_history",	
+	"file": "dialogs/explain_myname_history.xml",
+	"lang": "ja"
+    },{
+	"name": "explain_myself",	
+	"file": "dialogs/explain_myself.xml",
+	"lang": "ja"
+    }]
+}

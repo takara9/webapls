@@ -1,0 +1,7 @@
+{
+"id": "102",
+"title": "Watson NLC の利用料金の説明",
+"keywords": "NLC Watson ワトソン 自然言語分類 Bluemix 料金",
+"type": "Bluemix",
+"body": "Natural Language Classifier (NLC) 標準の料金プランでは、NLC 1インスタンスが毎月無料です。API 呼び出しは 1,000 件までが毎月無料で、トレーニングは 4回までが毎月無料です。 NLCの料金は、￥2,100/NLCインスタンス/月、￥0.3675/APIコール、￥315/トレーニング"
+}

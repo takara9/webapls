@@ -1,0 +1,11 @@
+{
+    "cluster_name":    "haru_cluster",
+    "cluster_size":    "1",
+    "config_name":     "haru_config",
+    "config_zip_path": "solr_config_ja/solr_config.zip",
+    "collection_name": "haru_CLOUD_collection",
+    "ranker_name":     "haru_CLOUD_ranker",
+    "docs_path":       "input_docs",
+    "training_csv":    "training_qa/ranker_train_ja.csv",
+    "training_raw":    "training_qa/training_data.txt"
+}

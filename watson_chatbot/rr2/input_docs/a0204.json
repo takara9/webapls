@@ -1,0 +1,7 @@
+{
+"id": "204",
+"title": "Watson RR のアプリケーション開発の言語",
+"keywords": "RR R&R 開発言語",
+"type": "Bluemix",
+"body": "Watson NLCのAPIはRESTで提供されます。 言語ライブラリとして node,java が提供され、解説の技術文書は、http://www.ibm.com/watson/developercloud/retrieve-and-rank/api/v1/ にあります。"
+}

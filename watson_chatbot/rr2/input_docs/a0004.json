@@ -1,0 +1,7 @@
+{
+"id": "4",
+"title": "Watson Dialog サービスの終了",
+"keywords": "Watson Dialog ワトソン サービス終了",
+"type": "Watson",
+"body": "Watson Dialog サービスは、Conversation サービスにリプレイスされる事が、2016年8月9日に発表されました。しかし、このサービスは日本語には対応していないので、日本語対応 Dialog サービスについては、別途アナウンスがあるそうです。https://developer.ibm.com/bluemix/2016/08/09/retirement-watson-dialog-service/"
+}

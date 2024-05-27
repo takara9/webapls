@@ -1,0 +1,7 @@
+{
+"id": "504",
+"title": "IBM Cloudantのアプリケーション開発の言語",
+"keywords": "Cloudant クラウダント 開発言語 マニュアル",
+"type": "Cloudant",
+"body": "IBM CloudantのAPIはRESTで提供されます。 言語ライブラリとして Mobile版はAndroid/JavaSE、及びiOSが提供されています。また、Java、Node.js、Couchdb、Python、Objective C and Swiftが提供されています。詳細は https://docs.cloudant.com/libraries.html を参照ください。"
+}

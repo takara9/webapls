@@ -1,0 +1,7 @@
+{
+"id": "404",
+"title": "IBM Watson Conversation のアプリケーション開発の言語",
+"keywords": "Conversation 対話機能 開発言語 マニュアル",
+"type": "Bluemix",
+"body": "Watson Conversation のAPIはRESTで提供されます。 言語ライブラリとして node,java,Python が提供され、解説の技術文書は、https://www.ibm.com/watson/developercloud/doc/conversation/ にあります。"
+}

@@ -1,0 +1,7 @@
+{
+"id": "304",
+"title": "Watson Dialog のアプリケーション開発の言語",
+"keywords": "Dialog 対話機能 開発言語",
+"type": "Bluemix",
+"body": "Watson DialogのAPIはRESTで提供されます。 言語ライブラリとして node,java が提供され、解説の技術文書は、http://www.ibm.com/watson/developercloud/dialog/api/v1/#introduction にあります。"
+}

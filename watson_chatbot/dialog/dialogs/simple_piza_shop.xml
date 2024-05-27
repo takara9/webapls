@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dialog xsi:noNamespaceSchemaLocation="WatsonDialogDocument_1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <flow>
+
+        <folder label="Main" id="main">
+
+            <output id="start">
+                <prompt selectionType="SEQUENTIAL">
+                    <item>こんにちは、ワトソンのピザ屋です</item>
+                </prompt>
+		<goto ref="check_area">
+		  <action varName="PizzaType"  operator="SET_TO_BLANK"/>
+		  <action varName="Address"    operator="SET_TO_BLANK"/>
+		  <action varName="Complete"   operator="SET_TO_NO"/>
+		  <action varName="OutOfArea"  operator="SET_TO_NO"/>
+		</goto>
+	    </output>
+
+            <output id="close">
+                <prompt selectionType="SEQUENTIAL">
+                    <item>またのご来店をお待ちしております</item>
+                </prompt>
+	    </output>
+
+        </folder>
+
+
+        <folder label="Library">
+            <folder label="Area Capture" id="check_area">
+	      <output>
+                <prompt selectionType="SEQUENTIAL">
+		  <item>最初に住所を教えてください。配達エリアを確認します</item>
+                </prompt>
+                <getUserInput>
+		  <input>
+		    <grammar>
+		      <item>東京都 江東 区</item>
+		      <item>$ 江東 区</item>
+		      <item>江東区</item>
+		    </grammar>
+		    <action varName="Address" operator="SET_TO">江東区</action>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>はい、配達エリア内です</item>
+		      </prompt>
+		      <goto ref="order_taking_0001"/>
+		    </output>
+		  </input>
+		  <input>
+		    <grammar>
+		      <item>東京 都 墨田 区</item>
+		      <item>$ 墨田 区</item>
+		      <item>墨田区</item>
+		    </grammar>
+		    <action varName="Address" operator="SET_TO">墨田区</action>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>はい、配達します。</item>
+		      </prompt>
+		      <goto ref="order_taking_0001"/>
+		    </output>
+		  </input>
+
+		  <output>
+		    <prompt selectionType="RANDOM">
+		      <item>ごめんなさい、あなたの地域へは配達できません</item>
+		    </prompt>
+		    <goto ref="close">
+		      <action varName="OutOfArea" operator="SET_TO_YES"/>
+		      <action varName="Complete" operator="SET_TO_YES"/>
+		    </goto>
+		  </output>
+
+		</getUserInput>
+	      </output>
+            </folder>
+
+
+            <folder label="Order Taker" id="order_taking_0001">
+	      <output>
+                <prompt selectionType="SEQUENTIAL" >
+                    <item>ピザの種類を注文してください。ミックスピザ と トマトピザ が選べます。</item>
+                </prompt>
+                <getUserInput id="getUserInput_0002">
+
+		  <input>
+		    <grammar>
+		      <item>ミックスピザ</item>
+		      <item>ミックス</item>
+		    </grammar>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>はい 承りました</item>
+		      </prompt>
+		      <goto ref="check_order">
+			<action varName="PizzaType" operator="SET_TO">ミックスピザ</action>
+		      </goto>
+		    </output>
+		  </input>
+
+		  <input>
+		    <grammar>
+		      <item>トマト*</item>
+		      <item>トマト</item>
+		      <item>$ トマト</item>
+		      <item>$ トマト*</item>
+		    </grammar>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>はい、承りました</item>
+		      </prompt>
+		      <goto ref="check_order">
+			<action varName="PizzaType" operator="SET_TO">トマトピザ</action>
+		      </goto>
+		    </output>
+		  </input>
+
+		  <default>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>ごめんなさい、ミックス か トマト でお答えください</item>
+		      </prompt>
+                    </output>
+		  </default>
+		  
+		</getUserInput>
+	      </output>
+	    </folder>
+
+
+            <folder label="Check Order" id="check_order">
+	      <output>
+                <prompt selectionType="SEQUENTIAL" >
+                    <item>ご注文は、{PizzaType} で、{Address} まで配達ですね。 これで良いですか?</item>
+                </prompt>
+
+                <getUserInput id="getUserInput_0003">
+		  <input>
+		    <grammar>
+		      <item>はい</item>
+		    </grammar>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>御注文ありがとうございます、約３０分で配達します</item>
+		      </prompt>
+		      <goto ref="close">
+			<action varName="Complete"  operator="SET_TO_YES"/>
+		      </goto>
+		    </output>
+		  </input>
+		  <input>
+		    <grammar>
+		      <item>いいえ</item>
+		    </grammar>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>最初から、お伺いします</item>
+		      </prompt>
+		      <goto ref="check_area">
+			<action varName="PizzaType" operator="SET_TO_BLANK"/>
+			<action varName="Address"   operator="SET_TO_BLANK"/>
+			<action varName="Complete"  operator="SET_TO_NO"/>
+		      </goto>
+		    </output>
+		  </input>
+
+		  <default>
+		    <output>
+		      <prompt selectionType="RANDOM">
+			<item>ごめんなさい、聞き取れませんでした。はい か いいえ でお答えください</item>
+		      </prompt>
+                    </output>
+		  </default>
+
+		</getUserInput>
+	      </output>
+	    </folder>
+
+            <folder label="Storage"/>
+        </folder>
+
+        <folder label="Global"/>
+        <folder label="Concepts"/>
+    </flow>
+    <constants>
+        <var_folder name="Home"/>
+    </constants>
+    <variables>
+        <var_folder name="Home">
+            <var name="Address"   type="TEXT"  description="利用者の住所"/>
+            <var name="PizzaType" type="TEXT"  description="ピザの種類"/>
+            <var name="Complete"  type="YESNO" description="完了フラグ"/>
+            <var name="OutOfArea"  type="YESNO" description="対象エリア外フラグ"/>
+        </var_folder>
+    </variables>
+
+
+    <settings>
+        <setting name="USERIDNUM" type="USER"></setting>
+        <setting name="EMAIL" type="USER">takara@jp.ibm.com</setting>
+        <setting name="PASSWORD" type="USER"></setting>
+        <setting name="FIRSTNAME" type="USER">Maho</setting>
+        <setting name="LASTNAME" type="USER">Takara</setting>
+        <setting name="COUNTRY" type="USER">JP</setting>
+        <setting name="STATE" type="USER"></setting>
+        <setting name="CITY" type="USER">Tokyo</setting>
+        <setting name="BDAY" type="USER">5</setting>
+        <setting name="BMONTH" type="USER">10</setting>
+        <setting name="BYEAR" type="USER">2001</setting>
+        <setting name="SEX" type="USER">Male</setting>
+        <setting name="DISPLAYNAME" type="USER">Takara</setting>
+        <setting name="PROVIDESECURITYPASSWORD" type="USER">false</setting>
+        <setting name="SECURITYPASSWORD" type="USER"></setting>
+        <setting name="SHOWPERSPROFILE" type="USER">false</setting>
+        <setting name="USETYPE" type="USER">0</setting>
+        <setting name="DATEJOINED" type="USER">2015-03-30 15:08:32.0</setting>
+        <setting name="LASTLOGIN" type="USER">2015-03-30 15:08:32.0</setting>
+        <setting name="LOGINCOUNT" type="USER">1</setting>
+        <setting name="CREDIT" type="USER">-100</setting>
+        <setting name="CONVCOUNT" type="USER">2</setting>
+        <setting name="PERSONALITYTYPEID" type="USER">6</setting>
+        <setting name="SHOWSENDMESSAGE" type="USER">true</setting>
+        <setting name="ACTIVATED" type="USER">true</setting>
+        <setting name="MESSENGEREMAIL" type="USER"></setting>
+        <setting name="MESSENGERPASSWORD" type="USER"></setting>
+        <setting name="SENDCHATEMAIL" type="USER">true</setting>
+        <setting name="SENDFAVEMAIL" type="USER">true</setting>
+        <setting name="CACHE" type="USER">false</setting>
+        <setting name="CLASSTYPE" type="USER">3</setting>
+        <setting name="AUTOLEARN" type="USER">false</setting>
+        <setting name="LANGUAGE" type="USER">JA</setting>
+        <setting name="RESPONSETIME" type="USER">0</setting>
+        <setting name="MAXAUTOLEARNITEMS" type="USER">0</setting>
+        <setting name="NUMAUTOSETRELATED" type="USER">0</setting>
+        <setting name="TIMEZONEID" type="USER">Asia/Tokyo</setting>
+        <setting name="AUTOSETRELATEDNODEID" type="USER">0</setting>
+        <setting name="RETURNTOCHATNODEID" type="USER">0</setting>
+        <setting name="INPUTMASKTYPE" type="USER">0</setting>
+        <setting name="NUMLOGINATTEMPTS" type="USER">0</setting>
+        <setting name="CONCEPTMATCHING" type="USER">0</setting>
+    </settings>
+</dialog>

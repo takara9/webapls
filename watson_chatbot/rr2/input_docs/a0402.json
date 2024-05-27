@@ -1,0 +1,7 @@
+{
+"id": "402",
+"title": "Watson Conversation の利用料金の説明",
+"keywords": "Conversation 対話機能 Watson Bluemix 料金",
+"type": "Watson",
+"body": "IBM Watson Conversation 標準の料金は、無料プランは1カ月あたり1000回のAPIコールが利用できます。また、標準プランでは￥0.9345/APIコールの料金になります。さらに詳細な説明は、https://console.ng.bluemix.net/catalog/services/conversation/ を参照ください。"}
+

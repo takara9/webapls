@@ -1,0 +1,7 @@
+{
+"id": "502",
+"title": "Cloudantの利用料金",
+"keywords": "Cloudant 料金",
+"type": "Cloudant",
+"body": "料金プランには、Shared, Enterprise SMB, Enterprise Standard の３種類があります。Sharedでは、共有 Cloudant Cluster の Cloudant アカウントをプロビジョンします。このプランでは、最大 20GB の無料データ・ストレージが提供され、さらに毎月 100,000 の高負荷 API 呼び出し、および 500,000 の軽負荷 API 呼び出しを無料で利用できます。無料分を超えた使用量に対しては、￥105 円/GB、￥3.15 円/1000 Light API Calls、￥15.75 円/1000 Heavy API Calls の課金となります。その他の料金の説明はこのURLを参照ください。https://console.ng.bluemix.net/catalog/services/cloudant-nosql-db/"
+}

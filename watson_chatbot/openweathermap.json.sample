@@ -1,0 +1,7 @@
+{
+    "units": "metric", 
+    "lang":  "en", 
+    "mode":  "json", 
+    "appid": "********************************",
+    "q":     "tokyo,jp"
+}
