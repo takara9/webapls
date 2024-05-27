@@ -1,0 +1,4 @@
+create user 'zabbix'@'localhost' identified by 'zabbix';
+create database zabbix;
+grant all privileges on zabbix.* to 'zabbix'@'localhost';
+flush privileges;
