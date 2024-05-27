@@ -1,0 +1,46 @@
+#!/bin/bash
+
+export LANG=C
+
+OS_RELEASE=/etc/centos-release
+if [ -f $OS_RELEASE ]; then
+  OS=`cat $OS_RELEASE |sed -e 's/[^0-9.]//g'|awk '/^[0-9]/ { print int($1) }'`
+else 
+  printf "Unknown OS\n"
+  exit
+fi
+
+######## CentOS common
+yum update -y
+yum install curl gcc -y
+if [ -e /usr/bin/pip ]; then
+    echo "pip available"
+else
+    curl -kL https://bootstrap.pypa.io/get-pip.py | python
+fi
+
+
+######## CentOS 6
+if [ $OS -eq 6 ];then
+
+yum install dump -y
+pip install requests==2.5.3
+pip install softlayer-object-storage
+
+
+######## CentOS 7
+elif [ $OS -eq 7 ];then
+
+yum install xfsdump dump -y
+pip install softlayer-object-storage
+
+
+######## Other
+else
+
+printf "Abort! due to unknown OS"
+exit
+
+fi
+
+

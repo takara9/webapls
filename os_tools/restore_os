@@ -1,0 +1,145 @@
+#!/bin/bash
+export LANG=C
+source _bash_library
+START_PWD=$PWD
+
+# Check object storage authentication file
+if [ ! -f credentials.json ]; then
+    echo "オブジェクト・ストレージの認証情報をセットしてください。"
+    exit
+fi
+
+# 以下に値をセットすると対話なしで実行します。
+####################
+CNT_NAME=
+####################
+
+if [ ! $CNT_NAME ]; then
+    keyboard_input "オブジェクト・ストレージのコンテナ名をインプットしてください : " 
+    if [ $? -eq 0 ]; then
+	CNT_NAME=$RESULT
+    fi
+fi
+
+# install software modules
+FN=OS.txt
+if [ ! -f $FN ]; then
+    ./_install_modules_os
+    ./os_download.py $CNT_NAME OS.txt OS.txt
+    if [ $? = 1 ]; then
+	echo "コンテナが存在しません。終了します。"
+	rm -f $FN
+	exit
+    fi
+fi    
+
+# upload OS info
+OS_DIST=`cat OS.txt`
+if [ $OS_DIST = "CentOS" ]; then
+    OS_RELEASE=centos-release
+    ./os_download.py $CNT_NAME $OS_RELEASE $OS_RELEASE
+
+    if [ -f $OS_RELEASE ]; then
+	OS_VER=`cat $OS_RELEASE |sed -e 's/[^0-9.]//g'|awk '/^[0-9]/ { print int($1) }'`
+    else 
+	printf "Unknown OS\n"
+	exit
+    fi
+
+else
+    printf "Other Distribution\n"
+    exit
+fi
+
+echo
+echo $OS_DIST
+echo $OS_VER
+echo
+
+######## CentOS common
+mkdir /sysimage
+mkdir /sysimage/boot
+
+
+
+######## CentOS 6
+if [ $OS_VER -eq 6 ];then
+
+mount -t ext4  /dev/sda3 /sysimage
+mount -t ext2  /dev/sda1 /sysimage/boot
+
+cd /sysimage
+rm -fr *
+
+ln -s /root/os_tools/credentials.json .
+/root/os_tools/os_restore.py $CNT_NAME sda3 | restore -rf -
+
+cd /sysimage/boot
+ln -s /root/os_tools/credentials.json .
+/root/os_tools/os_restore.py $CNT_NAME sda1 | restore -rf -
+
+
+# /sysimage/etc/fstab の編集
+# /sysimage/etc/grub の編集
+cd $START_PWD
+create_device_diff_list
+edit_fstab
+edit_grub
+
+
+# install grub
+chroot /sysimage <<EOL
+export PATH=/bin:/sbin:$PATH
+MAKEDEV sda
+
+grub <<EOF
+root (hd0,0)
+setup (hd0)
+quit
+EOF
+
+EOL
+sync
+sync
+
+
+######## CentOS 7
+elif [ $OS_VER -eq 7 ];then
+
+mount -t xfs  /dev/sda3 /sysimage
+mount -t xfs  /dev/sda1 /sysimage/boot
+
+cd /sysimage
+rm -fr *
+
+ln -s /root/os_tools/credentials.json .
+/root/os_tools/os_restore.py $CNT_NAME sda3 | xfsrestore - /sysimage
+
+cd /sysimage/boot
+ln -s /root/os_tools/credentials.json .
+/root/os_tools/os_restore.py $CNT_NAME sda1 | xfsrestore - /sysimage/boot
+
+
+#### edit /sysimage/etc/fstab
+cd $START_PWD
+create_device_diff_list
+edit_fstab
+
+### install boot loader grub2
+grub2-mkconfig
+grub2-install --boot-directory /sysimage/boot /dev/sda
+sync
+sync
+
+######## Other
+else
+
+printf "Abort! due to unknown OS"
+exit
+
+fi
+
+
+
+
+

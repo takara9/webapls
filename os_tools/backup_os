@@ -1,0 +1,129 @@
+#!/bin/bash
+export LANG=C
+source _bash_library
+
+# Check object storage authentication file
+if [ ! -f credentials.json ]; then
+    echo "オブジェクト・ストレージの認証情報をセットしてください。"
+    exit
+fi
+
+
+####################
+#CNT_NAME=`hostname -s`   # server hostname
+CNT_NAME=
+####################
+if [ ! $CNT_NAME ]; then
+    keyboard_input "オブジェクト・ストレージのコンテナ名をインプットしてください : " 
+    if [ $? -eq 0 ]; then
+	CNT_NAME=$RESULT
+    fi
+fi
+
+# Install modules 
+FN=OS.txt
+if [ ! -f $FN ]; then
+    ./_install_modules_os
+fi    
+
+# Upload OS distribution info
+OS_RELEASE=/etc/centos-release
+if [ -f $OS_RELEASE ]; then
+  OS=`cat $OS_RELEASE |sed -e 's/[^0-9.]//g'|awk '/^[0-9]/ { print int($1) }'`
+  OS_DIST=OS.txt
+  echo "CentOS" > $OS_DIST
+  ./os_put.py $OS_DIST $CNT_NAME $OS_DIST
+  ./os_put.py /etc/centos-release $CNT_NAME centos-release
+else 
+  printf "Unknown OS\n"
+  exit
+fi
+
+
+######## CentOS common
+# fdisk -l
+FN=fdisk_l.txt
+LANG=C;fdisk -l > /tmp/$FN
+./os_put.py /tmp/$FN $CNT_NAME $FN
+rm -f /tmp/$FN
+
+# df -m
+FN=df_m.txt
+LANG=C;df -m > /tmp/$FN
+./os_put.py /tmp/$FN $CNT_NAME $FN
+rm -f /tmp/$FN
+
+# /etc/fstab
+FN=fstab
+./os_put.py /etc/$FN $CNT_NAME $FN
+
+# /root/credentials.json
+FN=credentials.json
+./os_put.py /root/os_tools/$FN $CNT_NAME $FN
+
+# device & uuid list upload
+FN=device_uuid_list_backup.txt
+ls -l /dev/disk/by-uuid/ |awk '{print $9 " " $11}' | sed -e 's/..//' -e 's/..\/..\///' -e '/^ *$/d' > $FN
+./os_put.py $FN $CNT_NAME $FN
+
+######## CentOS 6
+if [ $OS -eq 6 ];then
+
+# /boot/grub/grub.conf
+FN=grub.conf
+./os_put.py /boot/grub/$FN $CNT_NAME $FN
+
+# BOOT 
+DEVICE=sda1
+printf "=== $DEVICE ===\n" > dump.log
+dump -0uf - /dev/$DEVICE 2>> dump.log | ./os_dump.py $CNT_NAME $DEVICE
+
+# ROOT
+DEVICE=sda3
+printf "=== $DEVICE ===\n" >> dump.log
+dump -0uf - /dev/$DEVICE 2>> dump.log | ./os_dump.py $CNT_NAME $DEVICE
+
+# LOG UPLOAD
+FN=dump.log
+./os_put.py $FN $CNT_NAME $FN
+
+
+
+
+######## CentOS 7
+elif [ $OS -eq 7 ];then
+
+# /boot/grub2/grub.cfg
+FN=grub.cfg
+./os_put.py /boot/grub2/$FN $CNT_NAME $FN
+
+# /boot/grub2/device.map
+FN=device.map
+./os_put.py /boot/grub2/$FN $CNT_NAME $FN
+
+# BOOT 
+DEVICE=sda1
+printf "=== $DEVICE ===\n" > xfsdump.log
+xfsdump -L $DEVICE -l 0 - /dev/$DEVICE 2>> xfsdump.log | ./os_dump.py $CNT_NAME $DEVICE
+
+printf "\n" >> xfsdump.log
+# ROOT
+DEVICE=sda3
+printf "=== $DEVICE ===\n" >> xfsdump.log
+xfsdump -L $DEVICE -l 0 - /dev/$DEVICE 2>> xfsdump.log | ./os_dump.py $CNT_NAME $DEVICE
+
+# LOG UPLOAD
+FN=xfsdump.log
+./os_put.py $FN $CNT_NAME $FN
+
+
+
+######## Other
+else
+printf "Abort! due to unknown OS"
+exit
+
+fi
+
+
+

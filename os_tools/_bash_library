@@ -1,0 +1,95 @@
+#!/bin/bash
+
+function confirmation() {
+    MSG="Yes または No をインプットしてください? [yes/no] : "
+    echo -n $MSG
+
+    while read response; do
+    case $response in
+            'yes' | 'Yes' | 'y' | 'Y' ) 
+	     	   echo "受け付けました。"
+		   	return 1 ;;
+            'no' | 'No' | 'n' | 'N' )
+	     	  echo "もう一度おねがいます。"
+		       return 0 ;;
+            *)
+		echo "yes/no y/n で、もう一度おねがします。"
+		     echo -n $MSG
+		     esac
+    done
+}
+
+function keyboard_input() {
+    while true
+    do
+    echo -n $1 " "
+    read input_data
+    echo $input_data " で良いですか？"
+    confirmation
+    if [ $? -eq 1 ]; then
+        RESULT=$input_data 
+	     return 0
+	     elif [ $? -eq 0 ]; then
+	         continue;
+		 fi
+    done
+
+}
+
+
+function create_device_diff_list() {
+    ## バックアップ前のuuid リスト取得
+    OLD_DEV_LIST=device_uuid_list_backup.txt
+    ./os_download.py $CNT_NAME $OLD_DEV_LIST $OLD_DEV_LIST
+
+    ## 現在のuuid リスト作成
+    NEW_DEV_LIST=device_uuid_list_recovery.txt
+    ls -l /dev/disk/by-uuid/ |awk '{print $9 " " $11}' | sed -e 's/..//' -e 's/..\/..\///' -e '/^ *$/d' > $NEW_DEV_LIST
+
+    ## 新と旧の対比リスト作成
+    DIF_DEV_LIST=device_uuid_list_history.txt
+    rm -f $DIF_DEV_LIST
+
+    while read line_old
+    do
+    old_dev=`echo $line_old |awk '{print $2}'`
+    old_uuid=`echo $line_old |awk '{print $1}'`
+
+	while read line_new
+	do
+	    new_dev=`echo $line_new |awk '{print $2}'`
+	        new_uuid=`echo $line_new |awk '{print $1}'`
+		    if [ $old_dev = $new_dev ]; then
+		       echo $old_dev $old_uuid $new_uuid >> $DIF_DEV_LIST
+		           fi
+
+	done < $NEW_DEV_LIST
+    done < $OLD_DEV_LIST
+
+}
+
+# /sysimage/etc/fstab の編集
+function edit_fstab() {
+    TARGET_FILE=/sysimage/etc/fstab
+    ## fstab 書き換え??
+    while read line
+    do
+    old_uuid=`echo $line |awk '{print $2}'`
+    new_uuid=`echo $line |awk '{print $3}'`
+    sed -i -e "s/$old_uuid/$new_uuid/g" $TARGET_FILE
+    done < $DIF_DEV_LIST
+}
+
+# /sysimage/etc/grub の編集 for CentOS6
+function edit_grub() {
+    ## grub 書き換え??
+    TARGET_FILE=/sysimage/etc/grub.conf
+    ## fstab 書き換え??
+    while read line
+    do
+    old_uuid=`echo $line |awk '{print $2}'`
+    new_uuid=`echo $line |awk '{print $3}'`
+    sed -i -e "s/$old_uuid/$new_uuid/g" $TARGET_FILE
+    done < $DIF_DEV_LIST
+}
+
